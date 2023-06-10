@@ -87,6 +87,13 @@ using Bookstore.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 12 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\_Imports.razor"
+using Bookstore.Shared.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 2 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Authentication.razor"
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
