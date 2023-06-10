@@ -1,5 +1,6 @@
 using Bookstore.Server.Data;
 using Bookstore.Server.Models;
+using Bookstore.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,8 @@ namespace Bookstore.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<IBooksService, MssqlBooksService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

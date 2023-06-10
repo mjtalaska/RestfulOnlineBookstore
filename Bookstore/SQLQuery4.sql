@@ -1,0 +1,5 @@
+﻿insert into Books (Title, Year, OriginalLanguageLanguageId, Amount, Cover, StatusId) values ('IT', 2001, 1, 10, 'https://m.media-amazon.com/images/I/71oWFPril4L._AC_UF1000,1000_QL80_.jpg', 1)
+insert into BookGenre (GenresGenreId, BooksBookId) values (1, 1)
+insert into BookGenre (GenresGenreId, BooksBookId) values (2, 1)
+insert into BookBookType (BooksBookId, TypeBookTypeId) values (1, 1)
+insert into People (Name, Surname, DateOfBirht, Discriminator) values ('Stephen', 'King', '1946-10-12', 'Author')

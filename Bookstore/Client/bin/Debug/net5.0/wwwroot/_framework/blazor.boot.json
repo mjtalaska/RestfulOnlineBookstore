@@ -198,15 +198,15 @@
       "mscorlib.dll": "sha256-CbcIR45\/xUFaZJqGIle6bb7v2kWYjp4kOFpKNnCkd4I=",
       "netstandard.dll": "sha256-qE0Q70OyVlHYY\/Y3nwMjfh+zissea9uhfvWMvPWfI7w=",
       "System.Private.CoreLib.dll": "sha256-pdkcl2+OojCfrhxX5eFmKI30wAmhL6s+sCLp7s175k0=",
-      "Bookstore.Shared.dll": "sha256-Wk3SrfRpxWW8pXROwak1neqT2zRgDxEm72qMrjToah0=",
-      "Bookstore.Client.dll": "sha256-JG+bzYa6AFHJ0a1+PJ2v3NxrC1Lo8XhHowEHDDbfy0w="
+      "Bookstore.Shared.dll": "sha256-Ek2bd62zGW6V5oKjp5lWp7x\/nsAnel+Pu9v1kpA6h18=",
+      "Bookstore.Client.dll": "sha256-Bjc7yjeYtomH++tI5aF8lYVmsF8nkCvkeFgItL7fEfI="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "Bookstore.Shared.pdb": "sha256-L6J6R\/iE+SfqGc9fQTKEMNk6NkIbGrXPoNOWkzqXkik=",
-      "Bookstore.Client.pdb": "sha256-tB3Th0OHVgKmpihGE1ZSp8QHcepGfS2oZol9ABOnt9E="
+      "Bookstore.Shared.pdb": "sha256-tx3VFIgaIviVT1zsX3XkOdyU98fAFu7j59oARdXpl94=",
+      "Bookstore.Client.pdb": "sha256-5rxsHU9bSPPu71z5\/uMfVAPcrva9fESMIDn2RNxF\/zk="
     },
     "runtime": {
       "dotnet.timezones.blat": "sha256-ootDKSA6cNAbgJLmPhrHsPVvVqkGEYdRZxucC22LWjw=",

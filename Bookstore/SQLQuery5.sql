@@ -1,0 +1,1 @@
+﻿select Title, Surname from Books join AuthorBook on BooksBookId = BookId join People on AuthorsPersonId = PersonId

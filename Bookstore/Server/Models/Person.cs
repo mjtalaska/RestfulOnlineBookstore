@@ -12,6 +12,5 @@ namespace Bookstore.Server.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public DateTime DateOfBirht { get; set; }
-        public CultureInfo Country { get; set; }
     }
 }
