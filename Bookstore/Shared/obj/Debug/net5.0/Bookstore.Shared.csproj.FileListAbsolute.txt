@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\bin\Debug\net5.0\Bookstore.Shared.deps.json
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\bin\Debug\net5.0\Bookstore.Shared.dll
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\bin\Debug\net5.0\ref\Bookstore.Shared.dll
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\bin\Debug\net5.0\Bookstore.Shared.pdb
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.AssemblyInfo.cs
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.dll
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\ref\Bookstore.Shared.dll
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Shared\obj\Debug\net5.0\Bookstore.Shared.pdb
