@@ -9,12 +9,17 @@ namespace Bookstore.Server.Models
     public class TranslatedBook
     {
         [Key]
-        public int TranslatedId { get; set; }
+        public int TranslatedBookId { get; set; }
 
-        public virtual Language TranslatedLanguage { get; set; }
         [Required]
+        public int BookId { get; set; }
+        [Required]
+        public int TranslatorId { get; set; }
+        [Required]
+        public int LanguageId { get; set; }
+
+        public virtual Language Language { get; set; }
         public virtual Book Book { get; set; }
-        
         public virtual Translator Translator { get; set; }
     }
 }

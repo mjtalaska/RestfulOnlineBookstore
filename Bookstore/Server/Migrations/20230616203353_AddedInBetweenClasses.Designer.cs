@@ -4,14 +4,16 @@ using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230616203353_AddedInBetweenClasses")]
+    partial class AddedInBetweenClasses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -561,7 +563,7 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.Property<int>("TranslatedBookId")
+                    b.Property<int>("TranslatedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -572,12 +574,15 @@ namespace Bookstore.Server.Migrations
                     b.Property<int>("LanguageId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TranslatedLanguageId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TranslatorId")
                         .HasColumnType("int");
 
-                    b.HasKey("TranslatedBookId");
+                    b.HasKey("TranslatedId");
 
-                    b.HasIndex("LanguageId");
+                    b.HasIndex("TranslatedLanguageId");
 
                     b.HasIndex("TranslatorId");
 
@@ -1109,9 +1114,9 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.Language", "Language")
+                    b.HasOne("Bookstore.Server.Models.Language", "TranslatedLanguage")
                         .WithMany("Translations")
-                        .HasForeignKey("LanguageId")
+                        .HasForeignKey("TranslatedLanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1121,7 +1126,7 @@ namespace Bookstore.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Language");
+                    b.Navigation("TranslatedLanguage");
 
                     b.Navigation("Translator");
                 });

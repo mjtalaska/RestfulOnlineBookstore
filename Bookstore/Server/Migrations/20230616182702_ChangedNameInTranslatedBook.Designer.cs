@@ -4,20 +4,82 @@ using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230616182702_ChangedNameInTranslatedBook")]
+    partial class ChangedNameInTranslatedBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.15")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ArtistTechnique", b =>
+                {
+                    b.Property<int>("ArtistsPersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KnownTechniquesTechniqueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArtistsPersonId", "KnownTechniquesTechniqueId");
+
+                    b.HasIndex("KnownTechniquesTechniqueId");
+
+                    b.ToTable("ArtistTechnique");
+                });
+
+            modelBuilder.Entity("AuthorBook", b =>
+                {
+                    b.Property<int>("AuthorsPersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsPersonId", "BooksBookId");
+
+                    b.HasIndex("BooksBookId");
+
+                    b.ToTable("AuthorBook");
+                });
+
+            modelBuilder.Entity("BookBookType", b =>
+                {
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeBookTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BooksBookId", "TypeBookTypeId");
+
+                    b.HasIndex("TypeBookTypeId");
+
+                    b.ToTable("BookBookType");
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GenresGenreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BooksBookId", "GenresGenreId");
+
+                    b.HasIndex("GenresGenreId");
+
+                    b.ToTable("BookGenre");
+                });
 
             modelBuilder.Entity("Bookstore.Server.Models.ApplicationUser", b =>
                 {
@@ -84,28 +146,6 @@ namespace Bookstore.Server.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.ArtistTechnique", b =>
-                {
-                    b.Property<int>("ArtistTechniqueId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ArtistId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TechniqueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArtistTechniqueId");
-
-                    b.HasIndex("ArtistId");
-
-                    b.HasIndex("TechniqueId");
-
-                    b.ToTable("ArtistTechniques");
-                });
-
             modelBuilder.Entity("Bookstore.Server.Models.ArtistsTask", b =>
                 {
                     b.Property<int>("ArtistsTaskId")
@@ -126,53 +166,6 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("ArtistsTasks");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.ArtistsTaskTechnique", b =>
-                {
-                    b.Property<int>("ArtistTechnique")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ArtistTaskId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ArtistsTaskId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TechniqueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArtistTechnique");
-
-                    b.HasIndex("ArtistsTaskId");
-
-                    b.HasIndex("TechniqueId");
-
-                    b.ToTable("ArtistsTaskTechniques");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.AuthorBook", b =>
-                {
-                    b.Property<int>("AuthorBookId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AuthorBookId");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("BookId");
-
-                    b.ToTable("AuthorBooks");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Book", b =>
@@ -226,50 +219,6 @@ namespace Bookstore.Server.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.BookBookType", b =>
-                {
-                    b.Property<int>("BookBookTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookBookTypeId");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("BookTypeId");
-
-                    b.ToTable("BookBookTypes");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.BookGenre", b =>
-                {
-                    b.Property<int>("BookGenreId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookGenreId");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("BookGenres");
-                });
-
             modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
                 {
                     b.Property<int>("BookInSeriesId")
@@ -306,7 +255,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("BookTypeId");
 
-                    b.ToTable("BookTypes");
+                    b.ToTable("BookType");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Cart", b =>
@@ -418,7 +367,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("LanguageId");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Language");
 
                     b.HasData(
                         new
@@ -550,18 +499,23 @@ namespace Bookstore.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ArtistsTaskId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TechniqueId");
 
-                    b.ToTable("Techniques");
+                    b.HasIndex("ArtistsTaskId");
+
+                    b.ToTable("Technique");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.Property<int>("TranslatedBookId")
+                    b.Property<int>("TranslatedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -569,41 +523,19 @@ namespace Bookstore.Server.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LanguageId")
+                    b.Property<int>("TranslatedLanguageId")
                         .HasColumnType("int");
 
                     b.Property<int>("TranslatorId")
                         .HasColumnType("int");
 
-                    b.HasKey("TranslatedBookId");
+                    b.HasKey("TranslatedId");
 
-                    b.HasIndex("LanguageId");
+                    b.HasIndex("TranslatedLanguageId");
 
                     b.HasIndex("TranslatorId");
 
                     b.ToTable("TranslatedBooks");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.TranslatorLanguage", b =>
-                {
-                    b.Property<int>("TranslatorLanguageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TranslatorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TranslatorLanguageId");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("TranslatorId");
-
-                    b.ToTable("TranslatorLanguages");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -707,6 +639,21 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("SubjectId", "SessionId", "Type");
 
                     b.ToTable("PersistedGrants");
+                });
+
+            modelBuilder.Entity("LanguageTranslator", b =>
+                {
+                    b.Property<int>("KnownLanguagesLanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TranslatorsPersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("KnownLanguagesLanguageId", "TranslatorsPersonId");
+
+                    b.HasIndex("TranslatorsPersonId");
+
+                    b.ToTable("LanguageTranslator");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -884,23 +831,64 @@ namespace Bookstore.Server.Migrations
                     b.HasDiscriminator().HasValue("Translator");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.ArtistTechnique", b =>
+            modelBuilder.Entity("ArtistTechnique", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.Artist", "Artist")
-                        .WithMany("KnownTechniques")
-                        .HasForeignKey("ArtistId")
+                    b.HasOne("Bookstore.Server.Models.Artist", null)
+                        .WithMany()
+                        .HasForeignKey("ArtistsPersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bookstore.Server.Models.Technique", "Technique")
-                        .WithMany("Artists")
-                        .HasForeignKey("TechniqueId")
+                    b.HasOne("Bookstore.Server.Models.Technique", null)
+                        .WithMany()
+                        .HasForeignKey("KnownTechniquesTechniqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthorBook", b =>
+                {
+                    b.HasOne("Bookstore.Server.Models.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsPersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Artist");
+                    b.HasOne("Bookstore.Server.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("Technique");
+            modelBuilder.Entity("BookBookType", b =>
+                {
+                    b.HasOne("Bookstore.Server.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bookstore.Server.Models.BookType", null)
+                        .WithMany()
+                        .HasForeignKey("TypeBookTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.HasOne("Bookstore.Server.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bookstore.Server.Models.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresGenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.ArtistsTask", b =>
@@ -911,7 +899,7 @@ namespace Bookstore.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bookstore.Server.Models.Book", "Book")
+                    b.HasOne("Bookstore.Server.Models.Book", "Comic")
                         .WithMany("ComicArtists")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -919,43 +907,7 @@ namespace Bookstore.Server.Migrations
 
                     b.Navigation("Artist");
 
-                    b.Navigation("Book");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.ArtistsTaskTechnique", b =>
-                {
-                    b.HasOne("Bookstore.Server.Models.ArtistsTask", "ArtistsTask")
-                        .WithMany("Techniques")
-                        .HasForeignKey("ArtistsTaskId");
-
-                    b.HasOne("Bookstore.Server.Models.Technique", "Technique")
-                        .WithMany("ArtistsTasks")
-                        .HasForeignKey("TechniqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ArtistsTask");
-
-                    b.Navigation("Technique");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.AuthorBook", b =>
-                {
-                    b.HasOne("Bookstore.Server.Models.Author", "Author")
-                        .WithMany("Books")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookstore.Server.Models.Book", "Book")
-                        .WithMany("Authors")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Book");
+                    b.Navigation("Comic");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Book", b =>
@@ -999,44 +951,6 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Status");
 
                     b.Navigation("TranslatedBook");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.BookBookType", b =>
-                {
-                    b.HasOne("Bookstore.Server.Models.Book", "Book")
-                        .WithMany("Type")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookstore.Server.Models.BookType", "BookType")
-                        .WithMany("Books")
-                        .HasForeignKey("BookTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("BookType");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.BookGenre", b =>
-                {
-                    b.HasOne("Bookstore.Server.Models.Book", "Book")
-                        .WithMany("Genres")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookstore.Server.Models.Genre", "Genre")
-                        .WithMany("Books")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
@@ -1107,11 +1021,18 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Bookstore.Server.Models.Technique", b =>
+                {
+                    b.HasOne("Bookstore.Server.Models.ArtistsTask", null)
+                        .WithMany("Techniques")
+                        .HasForeignKey("ArtistsTaskId");
+                });
+
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.Language", "Language")
+                    b.HasOne("Bookstore.Server.Models.Language", "TranslatedLanguage")
                         .WithMany("Translations")
-                        .HasForeignKey("LanguageId")
+                        .HasForeignKey("TranslatedLanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1121,28 +1042,24 @@ namespace Bookstore.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Language");
+                    b.Navigation("TranslatedLanguage");
 
                     b.Navigation("Translator");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.TranslatorLanguage", b =>
+            modelBuilder.Entity("LanguageTranslator", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.Language", "Language")
-                        .WithMany("Translators")
-                        .HasForeignKey("LanguageId")
+                    b.HasOne("Bookstore.Server.Models.Language", null)
+                        .WithMany()
+                        .HasForeignKey("KnownLanguagesLanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bookstore.Server.Models.Translator", "Translator")
-                        .WithMany("KnownLanguages")
-                        .HasForeignKey("TranslatorId")
+                    b.HasOne("Bookstore.Server.Models.Translator", null)
+                        .WithMany()
+                        .HasForeignKey("TranslatorsPersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Language");
-
-                    b.Navigation("Translator");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1212,19 +1129,13 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.Book", b =>
                 {
-                    b.Navigation("Authors");
-
                     b.Navigation("Carts");
 
                     b.Navigation("ComicArtists");
 
                     b.Navigation("Comments");
 
-                    b.Navigation("Genres");
-
                     b.Navigation("Purchases");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
@@ -1232,23 +1143,11 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.BookType", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.Genre", b =>
-                {
-                    b.Navigation("Books");
-                });
-
             modelBuilder.Entity("Bookstore.Server.Models.Language", b =>
                 {
                     b.Navigation("Books");
 
                     b.Navigation("Translations");
-
-                    b.Navigation("Translators");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Publisher", b =>
@@ -1266,13 +1165,6 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("Bookstore.Server.Models.Technique", b =>
-                {
-                    b.Navigation("Artists");
-
-                    b.Navigation("ArtistsTasks");
-                });
-
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
                     b.Navigation("Book");
@@ -1280,21 +1172,12 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.Artist", b =>
                 {
-                    b.Navigation("KnownTechniques");
-
                     b.Navigation("Tasks");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.Author", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Translator", b =>
                 {
                     b.Navigation("Books");
-
-                    b.Navigation("KnownLanguages");
                 });
 #pragma warning restore 612, 618
         }

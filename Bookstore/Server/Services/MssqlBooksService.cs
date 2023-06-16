@@ -30,8 +30,8 @@ namespace Bookstore.Server.Services
                     Cover = e.Cover, 
                     Year = e.Year, 
                     Authors = string.Join(" ", 
-                    e.Authors.Select(s => s.Name + " " + s.Surname)),
-                    Genres = e.Genres.Select(s => s.Name).ToArray()
+                    e.Authors.Select(s => s.Author).Select(s => s.Name + " " + s.Surname)),
+                    Genres = e.Genres.Select(s => s.Genre).Select(s => s.Name).ToArray()
                 })
                 .ToArrayAsync();
             return query2;

@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bookstore.Server.Models
 {
-    public class BookInSeries
+    public class AuthorBook
     {
         [Key]
-        public int BookInSeriesId { get; set; }
+        public int AuthorBookId { get; set; }
         [Required]
-        public int Number { get; set; }
+        public int AuthorId { get; set; }
         [Required]
         public int BookId { get; set; }
-        [Required]
-        public int SeriesId { get; set; }
 
+        public virtual Author Author { get; set; }
         public virtual Book Book { get; set; }
-        public virtual Series Series { get; set; }
     }
 }
