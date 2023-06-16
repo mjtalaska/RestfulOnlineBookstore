@@ -9,6 +9,6 @@ namespace Bookstore.Server.Models
     {
         public string? Pseudonym { get; set; }
         
-        public virtual ICollection<AuthorBook> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
     }
 }

@@ -119,7 +119,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 41 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
+#line 55 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
       
     private RetrieveBook[] books;
 

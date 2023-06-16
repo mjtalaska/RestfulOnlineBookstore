@@ -4,7 +4,8 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject HttpClient Http
 
-<h1>Available books:</h1>
+
+<h1><b>Available books:</b></h1>
 @if (books == null)
 {
     <p><em>Loading...</em></p>
@@ -16,13 +17,26 @@ else
         {
             <tr>
                 <td class="image">
-                    <img src="@book.Cover" width="200" height="250" />
+                    <img src="@book.Cover"/>
                 </td>
                 <td class="text">
-                    @book.Title<br />
-                    @book.Year<br />
-                    @book.Authors<br />
-                    @book.Status <br />
+                    <p style="font-size: 30px">@book.Title</p>
+                    <p style="font-size: 25px">@book.Authors</p>
+                    <p style="font-size: 20px">@book.Year</p>
+                    @if (book.Status.StartsWith("U"))
+                    {
+                        <p style="color: #a6a6a6">
+                            @book.Status
+                        </p>
+                    }
+                    else
+                    {
+                        <p style="color: #6600ff">
+                            @book.Status
+                        </p>
+                    }
+                    <div style="text-align: left">@string.Join(" ", book.Genres)</div>
+
                 </td>
                 <td class="buttons">
                     <button class="details" />
@@ -57,17 +71,30 @@ else
 
 <style>
 
+    img {
+        width: 110%;
+        height: 110%;
+    }
+
+    h1 {
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
     table {
-        width: 50%;
+        width: 60%;
         border-collapse: separate;
         border-spacing: 0 10px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     tr {
         border-spacing: 10px;
         vertical-align: top;
         text-align: left;
-        font-family: 'Courier New';
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
         font-size: 20px;
         padding: 10px;
     }

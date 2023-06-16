@@ -20,14 +20,21 @@ namespace Bookstore.Server.Services
 
         public async Task<IEnumerable<RetrieveBook>> GetBooks()
         {
-            var books = await (from b in _context.Books
-                               join ab in _context.AuthorsBooks on b.BookId equals ab.BookId
-                               join a in _context.Authors on ab.AuthorId equals a.PersonId
-                               select new RetrieveBook{ Title = b.Title, Status = b.Status.Name, Cover = b.Cover, Year = b.Year, Authors = (a.Name + " " + a.Surname) })
-                               .ToArrayAsync();
-            var query = books.GroupBy(g => new { Title = g.Title, Status = g.Status, Cover = g.Cover, Year = g.Year })
-                .Select(b => new RetrieveBook { Title = b.Key.Title, Status = b.Key.Status, Cover = b.Key.Cover, Year = b.Key.Year, Authors = string.Join(",", b.Select(i => i.Authors)) }).ToArray();
-            return query;
+            var query2 = await _context.Books
+                .Select(e => 
+                new RetrieveBook 
+                { 
+                    BookId = e.BookId,
+                    Title = e.Title, 
+                    Status = e.Status.Name, 
+                    Cover = e.Cover, 
+                    Year = e.Year, 
+                    Authors = string.Join(" ", 
+                    e.Authors.Select(s => s.Name + " " + s.Surname)),
+                    Genres = e.Genres.Select(s => s.Name).ToArray()
+                })
+                .ToArrayAsync();
+            return query2;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace Bookstore.Server.Models
     public class Translator : Person
     {
         public virtual ICollection<Language> KnownLanguages { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual ICollection<TranslatedBook> Books { get; set; }
     }
 }
