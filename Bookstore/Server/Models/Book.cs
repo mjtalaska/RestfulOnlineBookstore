@@ -27,13 +27,13 @@ namespace Bookstore.Server.Models
         [Range(0,200)]
         public int? AdvisedAge { get; set; }
 
-        public int PublisherId { get; set; }
-        public int StatusId { get; set; }
-        public int LanguageId { get; set; }
-        public int TranslatedBookId { get; set; }
-        public int BookInSeriesId { get; set; }
-
         [Required]
+        public int PublisherId { get; set; }
+        [Required]
+        public int StatusId { get; set; }
+        [Required]
+        public int LanguageId { get; set; }
+
         public virtual Publisher Publisher { get; set; }
         public virtual Status Status { get; set; }
         public virtual Language Language { get; set; }

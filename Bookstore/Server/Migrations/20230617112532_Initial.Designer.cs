@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230616203353_AddedInBetweenClasses")]
-    partial class AddedInBetweenClasses
+    [Migration("20230617112532_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -175,20 +175,33 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("AuthorBooks");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorBookId = 1,
+                            AuthorId = 1,
+                            BookId = 1
+                        },
+                        new
+                        {
+                            AuthorBookId = 2,
+                            AuthorId = 1,
+                            BookId = 2
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Book", b =>
                 {
                     b.Property<int>("BookId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("AdvisedAge")
                         .HasColumnType("int");
 
                     b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookInSeriesId")
                         .HasColumnType("int");
 
                     b.Property<string>("Cover")
@@ -211,9 +224,6 @@ namespace Bookstore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TranslatedBookId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
@@ -226,6 +236,32 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("StatusId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            Amount = 120,
+                            Cover = "https://m.media-amazon.com/images/I/712+f2W4uoL._AC_UF1000,1000_QL80_.jpg",
+                            LanguageId = 1,
+                            Price = 25.99m,
+                            PublisherId = 1,
+                            StatusId = 1,
+                            Title = "IT",
+                            Year = 2002
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            Amount = 125,
+                            Cover = "https://cdn.kobo.com/book-images/36c33e57-6f48-43f5-ba3a-0d60d82e4308/353/569/90/False/carrie-2.jpg",
+                            LanguageId = 1,
+                            Price = 24.99m,
+                            PublisherId = 1,
+                            StatusId = 1,
+                            Title = "Carrie",
+                            Year = 1998
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookBookType", b =>
@@ -248,6 +284,20 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("BookTypeId");
 
                     b.ToTable("BookBookTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            BookBookTypeId = 1,
+                            BookId = 1,
+                            BookTypeId = 1
+                        },
+                        new
+                        {
+                            BookBookTypeId = 2,
+                            BookId = 2,
+                            BookTypeId = 1
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookGenre", b =>
@@ -270,6 +320,20 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("BookGenres");
+
+                    b.HasData(
+                        new
+                        {
+                            BookGenreId = 1,
+                            BookId = 1,
+                            GenreId = 1
+                        },
+                        new
+                        {
+                            BookGenreId = 2,
+                            BookId = 2,
+                            GenreId = 1
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
@@ -290,6 +354,9 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("BookInSeriesId");
 
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
                     b.HasIndex("SeriesId");
 
                     b.ToTable("BooksInSeries");
@@ -309,6 +376,13 @@ namespace Bookstore.Server.Migrations
                     b.HasKey("BookTypeId");
 
                     b.ToTable("BookTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            BookTypeId = 1,
+                            Name = "Book"
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Cart", b =>
@@ -404,6 +478,11 @@ namespace Bookstore.Server.Migrations
                         {
                             GenreId = 4,
                             Name = "Detective"
+                        },
+                        new
+                        {
+                            GenreId = 5,
+                            Name = "Science Fiction"
                         });
                 });
 
@@ -484,6 +563,12 @@ namespace Bookstore.Server.Migrations
                             PublisherId = 1,
                             Name = "Hachette Collections",
                             WebAddress = "https://www.hachette-collections.com/fr-fr/"
+                        },
+                        new
+                        {
+                            PublisherId = 2,
+                            Name = "Little, Brown & Company",
+                            WebAddress = "https://www.hachettebookgroup.com/imprint/little-brown-and-company/"
                         });
                 });
 
@@ -527,6 +612,13 @@ namespace Bookstore.Server.Migrations
                     b.HasKey("SeriesId");
 
                     b.ToTable("Series");
+
+                    b.HasData(
+                        new
+                        {
+                            SeriesId = 1,
+                            Name = "Overlord"
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Status", b =>
@@ -543,6 +635,18 @@ namespace Bookstore.Server.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("Status");
+
+                    b.HasData(
+                        new
+                        {
+                            StatusId = 1,
+                            Name = "Available"
+                        },
+                        new
+                        {
+                            StatusId = 2,
+                            Name = "Unavailable"
+                        });
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Technique", b =>
@@ -563,7 +667,7 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.Property<int>("TranslatedId")
+                    b.Property<int>("TranslatedBookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -571,18 +675,18 @@ namespace Bookstore.Server.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LanguageId")
+                    b.Property<int?>("LanguageId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TranslatedLanguageId")
+                    b.Property<int?>("TranslatorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TranslatorId")
-                        .HasColumnType("int");
+                    b.HasKey("TranslatedBookId");
 
-                    b.HasKey("TranslatedId");
+                    b.HasIndex("BookId")
+                        .IsUnique();
 
-                    b.HasIndex("TranslatedLanguageId");
+                    b.HasIndex("LanguageId");
 
                     b.HasIndex("TranslatorId");
 
@@ -965,18 +1069,6 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.Book", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.BookInSeries", "BookInSeries")
-                        .WithOne("Book")
-                        .HasForeignKey("Bookstore.Server.Models.Book", "BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookstore.Server.Models.TranslatedBook", "TranslatedBook")
-                        .WithOne("Book")
-                        .HasForeignKey("Bookstore.Server.Models.Book", "BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Bookstore.Server.Models.Language", "Language")
                         .WithMany("Books")
                         .HasForeignKey("LanguageId")
@@ -995,15 +1087,11 @@ namespace Bookstore.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BookInSeries");
-
                     b.Navigation("Language");
 
                     b.Navigation("Publisher");
 
                     b.Navigation("Status");
-
-                    b.Navigation("TranslatedBook");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookBookType", b =>
@@ -1046,11 +1134,19 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
                 {
+                    b.HasOne("Bookstore.Server.Models.Book", "Book")
+                        .WithOne("BookInSeries")
+                        .HasForeignKey("Bookstore.Server.Models.BookInSeries", "BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Bookstore.Server.Models.Series", "Series")
                         .WithMany("Books")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
 
                     b.Navigation("Series");
                 });
@@ -1114,19 +1210,23 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
                 {
-                    b.HasOne("Bookstore.Server.Models.Language", "TranslatedLanguage")
-                        .WithMany("Translations")
-                        .HasForeignKey("TranslatedLanguageId")
+                    b.HasOne("Bookstore.Server.Models.Book", "Book")
+                        .WithOne("TranslatedBook")
+                        .HasForeignKey("Bookstore.Server.Models.TranslatedBook", "BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Bookstore.Server.Models.Language", "Language")
+                        .WithMany("Translations")
+                        .HasForeignKey("LanguageId");
 
                     b.HasOne("Bookstore.Server.Models.Translator", "Translator")
                         .WithMany("Books")
-                        .HasForeignKey("TranslatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TranslatorId");
 
-                    b.Navigation("TranslatedLanguage");
+                    b.Navigation("Book");
+
+                    b.Navigation("Language");
 
                     b.Navigation("Translator");
                 });
@@ -1219,6 +1319,8 @@ namespace Bookstore.Server.Migrations
                 {
                     b.Navigation("Authors");
 
+                    b.Navigation("BookInSeries");
+
                     b.Navigation("Carts");
 
                     b.Navigation("ComicArtists");
@@ -1229,12 +1331,9 @@ namespace Bookstore.Server.Migrations
 
                     b.Navigation("Purchases");
 
-                    b.Navigation("Type");
-                });
+                    b.Navigation("TranslatedBook");
 
-            modelBuilder.Entity("Bookstore.Server.Models.BookInSeries", b =>
-                {
-                    b.Navigation("Book");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.BookType", b =>
@@ -1276,11 +1375,6 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Artists");
 
                     b.Navigation("ArtistsTasks");
-                });
-
-            modelBuilder.Entity("Bookstore.Server.Models.TranslatedBook", b =>
-                {
-                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("Bookstore.Server.Models.Artist", b =>

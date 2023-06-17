@@ -47,6 +47,13 @@ namespace Bookstore.Server.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<TranslatedBook>(t =>
+            {
+                t.HasOne(e => e.Translator).WithMany(e => e.Books);
+                t.HasOne(e => e.Language).WithMany(e => e.Translations);
+                t.HasOne(e => e.Book).WithOne(e => e.TranslatedBook);
+            });
+
             builder.Entity<Artist>(a =>
             {
                 a.HasMany(e => e.KnownTechniques).WithOne(e => e.Artist);
@@ -65,6 +72,12 @@ namespace Bookstore.Server.Data
                 a.HasMany(e => e.Books).WithOne(e => e.Author);
             });
 
+            builder.Entity<BookInSeries>(b =>
+            {
+                b.HasOne(e => e.Series).WithMany(e => e.Books);
+                b.HasOne(e => e.Book).WithOne(e => e.BookInSeries);
+            });
+
             builder.Entity<Book>(b =>
             {
                 b.HasOne(e => e.Language).WithMany(e => e.Books);
@@ -74,18 +87,12 @@ namespace Bookstore.Server.Data
                 b.HasMany(e => e.ComicArtists).WithOne(e => e.Book);
                 b.HasMany(e => e.Type).WithOne(e => e.Book);
                 b.HasOne(e => e.Publisher).WithMany(e => e.Books);
-                b.HasOne(e => e.TranslatedBook).WithOne(e => e.Book);
                 b.HasMany(e => e.Carts).WithOne(e => e.Book);
                 b.HasMany(e => e.Purchases).WithOne(e => e.Book);
                 b.HasMany(e => e.Comments).WithOne(e => e.Book);
                 b.HasOne(e => e.BookInSeries).WithOne(e => e.Book);
                 b.Property(e => e.Price).HasColumnType("decimal(5,2)").IsRequired(true);
-            });
-
-            builder.Entity<BookInSeries>(b =>
-            {
-                b.HasOne(e => e.Series).WithMany(e => e.Books);
-                b.HasOne(e => e.Book).WithOne(e => e.BookInSeries).HasForeignKey<Book>(e => e.BookId);
+                b.HasOne(e => e.TranslatedBook).WithOne(e => e.Book);
             });
 
             builder.Entity<Cart>(c =>
@@ -144,13 +151,6 @@ namespace Bookstore.Server.Data
                 s.HasMany(e => e.Books).WithOne(e => e.Series);
             });
 
-            builder.Entity<TranslatedBook>(t =>
-            {
-                t.HasOne(e => e.Book).WithOne(e => e.TranslatedBook).HasForeignKey<Book>(e => e.BookId);
-                t.HasOne(e => e.Translator).WithMany(e => e.Books);
-                t.HasOne(e => e.Language).WithMany(e => e.Translations);
-            });
-
             builder.Entity<Translator>(t =>
             {
                 t.HasMany(e => e.Books).WithOne(e => e.Translator);
@@ -200,8 +200,9 @@ namespace Bookstore.Server.Data
                 a.HasOne(e => e.Book).WithMany(e => e.Authors);
             });
 
-            Publisher p = new Publisher { PublisherId = 1, Name = "Hachette Collections", WebAddress = "https://www.hachette-collections.com/fr-fr/" };
-            builder.Entity<Publisher>().HasData(p);
+            Publisher p1 = new Publisher { PublisherId = 1, Name = "Hachette Collections", WebAddress = "https://www.hachette-collections.com/fr-fr/" };
+            Publisher p2 = new Publisher { PublisherId = 2, Name = "Little, Brown & Company", WebAddress = "https://www.hachettebookgroup.com/imprint/little-brown-and-company/" };
+            builder.Entity<Publisher>().HasData(p1, p2);
 
             Author a1 = new Author { PersonId = 1, Name = "Stephen", Surname = "King", DateOfBirht = DateTime.Parse("1945-10-12")};
             Author a2 = new Author { PersonId = 2, Name = "Maruyama", Surname = "Kagune", DateOfBirht = DateTime.Parse("1990-03-30") };
@@ -214,8 +215,57 @@ namespace Bookstore.Server.Data
             Genre g2 = new Genre { GenreId = 2, Name = "Fantasy" };
             Genre g3 = new Genre { GenreId = 3, Name = "Thriller" };
             Genre g4 = new Genre { GenreId = 4, Name = "Detective" };
-            builder.Entity<Genre>().HasData(g1, g2, g3, g4);
+            Genre g5 = new Genre { GenreId = 5, Name = "Science Fiction" };
+            builder.Entity<Genre>().HasData(g1, g2, g3, g4, g5);
 
+            BookType bt = new BookType { BookTypeId = 1, Name = "Book" };
+            builder.Entity<BookType>().HasData(bt);
+
+            Status st1 = new Status { StatusId = 1, Name = "Available" };
+            Status st2 = new Status { StatusId = 2, Name = "Unavailable" };
+
+            builder.Entity<Status>().HasData(st1, st2);
+
+            Series s = new Series { SeriesId = 1, Name = "Overlord" };
+            builder.Entity<Series>().HasData(s);
+
+            Book b1 = new Book
+            {
+                BookId = 1,
+                Title = "IT",
+                Year = 2002,
+                Amount = 120,
+                Price = 25.99M,
+                Cover = "https://m.media-amazon.com/images/I/712+f2W4uoL._AC_UF1000,1000_QL80_.jpg",
+                PublisherId = 1,
+                StatusId = 1,
+                LanguageId = 1
+            };
+            Book b2 = new Book
+            {
+                BookId = 2,
+                Title = "Carrie",
+                Year = 1998,
+                Amount = 125,
+                Price = 24.99M,
+                Cover = "https://cdn.kobo.com/book-images/36c33e57-6f48-43f5-ba3a-0d60d82e4308/353/569/90/False/carrie-2.jpg",
+                PublisherId = 1,
+                StatusId = 1,
+                LanguageId = 1
+            };
+            builder.Entity<Book>().HasData(b1, b2);
+
+            AuthorBook ab1 = new AuthorBook { AuthorBookId = 1, AuthorId = 1, BookId = 1 };
+            AuthorBook ab2 = new AuthorBook { AuthorBookId = 2, AuthorId = 1, BookId = 2 };
+            builder.Entity<AuthorBook>().HasData(ab1, ab2);
+
+            BookGenre bg1 = new BookGenre { BookGenreId = 1, BookId = 1, GenreId = 1 };
+            BookGenre bg2 = new BookGenre { BookGenreId = 2, BookId = 2, GenreId = 1 };
+            builder.Entity<BookGenre>().HasData(bg1, bg2);
+
+            BookBookType bbt1 = new BookBookType { BookBookTypeId = 1, BookId = 1, BookTypeId = 1 };
+            BookBookType bbt2 = new BookBookType { BookBookTypeId = 2, BookId = 2, BookTypeId = 1 };
+            builder.Entity<BookBookType>().HasData(bbt1, bbt2);
         }
     }
 }

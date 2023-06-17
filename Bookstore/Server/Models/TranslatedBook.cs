@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,13 +14,12 @@ namespace Bookstore.Server.Models
 
         [Required]
         public int BookId { get; set; }
-        [Required]
-        public int TranslatorId { get; set; }
-        [Required]
-        public int LanguageId { get; set; }
 
-        public virtual Language Language { get; set; }
+        public int? TranslatorId { get; set; }
+        public int? LanguageId { get; set; }
+
         public virtual Book Book { get; set; }
+        public virtual Language Language { get; set; }
         public virtual Translator Translator { get; set; }
     }
 }

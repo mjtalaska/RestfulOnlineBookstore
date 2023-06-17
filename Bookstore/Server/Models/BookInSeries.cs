@@ -14,9 +14,9 @@ namespace Bookstore.Server.Models
         [Required]
         public int Number { get; set; }
         [Required]
-        public int BookId { get; set; }
-        [Required]
         public int SeriesId { get; set; }
+        [Required]
+        public int BookId { get; set; }
 
         public virtual Book Book { get; set; }
         public virtual Series Series { get; set; }
