@@ -90,28 +90,21 @@ using Bookstore.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
+#line 2 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\BookDetails.razor"
 using Bookstore.Shared.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
-using Microsoft.AspNetCore.Authorization;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 4 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
+#line 3 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\BookDetails.razor"
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/")]
-    public partial class Index : Microsoft.AspNetCore.Components.ComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/details/{id}")]
+    public partial class BookDetails : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
@@ -119,10 +112,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 56 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
-      
-    private RetrieveBook[] books;
-    private string user;
+#line 81 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\BookDetails.razor"
+       
+    [Parameter]
+    public string id { get; set; }
+    private string user { get; set; }
+    private BookFull book { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -130,19 +125,13 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = authState.User.Identity.Name;
-            books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
+            book = await Http.GetFromJsonAsync<BookFull>($"/details/{id}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
     }
-
-    private void OpenDetails(int id)
-    {
-        navigationManager.NavigateTo($"/details/{id}");
-    }
-
 
 #line default
 #line hidden

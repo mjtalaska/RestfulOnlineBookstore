@@ -253,19 +253,72 @@ namespace Bookstore.Server.Data
                 StatusId = 1,
                 LanguageId = 1
             };
-            builder.Entity<Book>().HasData(b1, b2);
+            Book b3 = new Book
+            {
+                BookId = 3,
+                Title = "The Undead King",
+                Year = 2016,
+                Amount = 2,
+                Price = 32.99M,
+                Cover = "https://cdn.kobo.com/book-images/21843689-7801-4896-96a7-426d24b8b92a/1200/1200/False/overlord-vol-1-light-novel-2.jpg",
+                PublisherId = 2,
+                StatusId = 1,
+                LanguageId = 1
+            };
+            Book b4 = new Book
+            {
+                BookId = 4,
+                Title = "The Dark Worrior",
+                Year = 2017,
+                Amount = 4,
+                Price = 32.99M,
+                Cover = "https://m.media-amazon.com/images/I/51Yf2uZB3tL.jpg",
+                PublisherId = 2,
+                StatusId = 1,
+                LanguageId = 1
+            };
+            Book b5 = new Book
+            {
+                BookId = 5,
+                Title = "The Bloody Valkyrie",
+                Year = 2018,
+                Amount = 1,
+                Price = 32.99M,
+                Cover = "https://m.media-amazon.com/images/I/414xg51k78L._AC_UF1000,1000_QL80_.jpg",
+                PublisherId = 2,
+                StatusId = 1,
+                LanguageId = 1
+            };
+            builder.Entity<Book>().HasData(b1, b2, b3, b4, b5);
 
             AuthorBook ab1 = new AuthorBook { AuthorBookId = 1, AuthorId = 1, BookId = 1 };
             AuthorBook ab2 = new AuthorBook { AuthorBookId = 2, AuthorId = 1, BookId = 2 };
-            builder.Entity<AuthorBook>().HasData(ab1, ab2);
+            AuthorBook ab3 = new AuthorBook { AuthorBookId = 3, AuthorId = 2, BookId = 3 };
+            AuthorBook ab4 = new AuthorBook { AuthorBookId = 4, AuthorId = 2, BookId = 4 };
+            AuthorBook ab5 = new AuthorBook { AuthorBookId = 5, AuthorId = 2, BookId = 5 };
+            builder.Entity<AuthorBook>().HasData(ab1, ab2, ab3, ab4, ab5);
 
             BookGenre bg1 = new BookGenre { BookGenreId = 1, BookId = 1, GenreId = 1 };
             BookGenre bg2 = new BookGenre { BookGenreId = 2, BookId = 2, GenreId = 1 };
-            builder.Entity<BookGenre>().HasData(bg1, bg2);
+            BookGenre bg3 = new BookGenre { BookGenreId = 3, BookId = 3, GenreId = 2 };
+            BookGenre bg4 = new BookGenre { BookGenreId = 4, BookId = 3, GenreId = 5 };
+            BookGenre bg5 = new BookGenre { BookGenreId = 5, BookId = 4, GenreId = 2 };
+            BookGenre bg6 = new BookGenre { BookGenreId = 6, BookId = 4, GenreId = 5 };
+            BookGenre bg7 = new BookGenre { BookGenreId = 7, BookId = 5, GenreId = 2 };
+            BookGenre bg8 = new BookGenre { BookGenreId = 8, BookId = 5, GenreId = 5 };
+            builder.Entity<BookGenre>().HasData(bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8);
 
             BookBookType bbt1 = new BookBookType { BookBookTypeId = 1, BookId = 1, BookTypeId = 1 };
             BookBookType bbt2 = new BookBookType { BookBookTypeId = 2, BookId = 2, BookTypeId = 1 };
-            builder.Entity<BookBookType>().HasData(bbt1, bbt2);
+            BookBookType bbt3 = new BookBookType { BookBookTypeId = 3, BookId = 3, BookTypeId = 1 };
+            BookBookType bbt4 = new BookBookType { BookBookTypeId = 4, BookId = 4, BookTypeId = 1 };
+            BookBookType bbt5 = new BookBookType { BookBookTypeId = 5, BookId = 5, BookTypeId = 1 };
+            builder.Entity<BookBookType>().HasData(bbt1, bbt2, bbt3, bbt4);
+
+            BookInSeries bis1 = new BookInSeries { BookInSeriesId = 1, BookId = 3, SeriesId = 1, Number = 1 };
+            BookInSeries bis2 = new BookInSeries { BookInSeriesId = 2, BookId = 4, SeriesId = 1, Number = 2 };
+            BookInSeries bis3 = new BookInSeries { BookInSeriesId = 3, BookId = 5, SeriesId = 1, Number = 3 };
+            builder.Entity<BookInSeries>().HasData(bis1, bis2, bis3);
         }
     }
 }

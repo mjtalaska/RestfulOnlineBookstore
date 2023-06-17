@@ -649,3 +649,5 @@ C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\ob
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Bookstore.Client.dll
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\ref\Bookstore.Client.dll
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Bookstore.Client.pdb
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\RazorDeclaration\Pages\BookDetails.razor.g.cs
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Razor\Pages\BookDetails.razor.g.cs

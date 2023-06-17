@@ -48,5 +48,24 @@ namespace Bookstore.Server.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<BookBookType> Type { get; set; }
         public virtual ICollection<BookGenre> Genres { get; set; }
+
+        public Boolean isAvailable()
+        {
+            if (Status.Name.Equals("Available"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int amountOrMaxAvailable(int orderedAmount)
+        {
+            return (orderedAmount <= Amount) ? orderedAmount : Amount;
+        }
+
+        public void upadateAmount(int changeAmount)
+        {
+            Amount += changeAmount;
+        }
     }
 }

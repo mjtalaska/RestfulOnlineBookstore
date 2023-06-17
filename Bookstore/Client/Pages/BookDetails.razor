@@ -1,0 +1,246 @@
+﻿@page "/details/{id}"
+@using Bookstore.Shared.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (book == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1><b>Details:</b></h1>
+    <p style="text-align: right; margin: 0;">
+        <button class="comments" />
+        <span style="padding-left: 20px" />
+        <button class="cart" />
+    </p>
+    <table class="normal">
+        <tr class="normal">
+            <td class="normal">
+                <table>
+                    <tr>
+                        <td>
+                            @if (!book.isAvailable())
+                            {
+                                <p style="color: #a6a6a6">
+                                    @book.Status
+                                </p>
+                            }
+                            else
+                            {
+                                <p style="color: #6600ff">
+                                    @book.Status
+                                </p>
+                                <p>
+                                    Available amount: @book.Amount
+                                </p>
+                            }
+                            <p>
+                                Price: @book.Price USD
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Genres:</p>
+                            @foreach (var genre in book.Genres)
+                            {
+                                <p>@genre</p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="normal" style="width: 75%">
+                <table>
+                    <tr>
+                        <td class="image">
+                            <img src="@book.Cover" />
+                        </td>
+                        <td style="width: 50%">
+                            @if (book.Series != null)
+                            {
+                                <p style="font-size: 50px">@book.Series vol @book.Number</p>
+                            }
+                            <p style="font-size: 50px">@book.Title</p>
+                            <p style="font-size: 40px">Authors: @string.Join(", ", book.Authors)</p>
+                            <p style="font-size: 30px">Year:  @book.Year</p>
+                            <p style="font-size: 30px">Original Language:  @book.Language</p>
+                            <p style="font-size: 30px">Publisher: <a href="@book.Publisher.WebAddress">@book.Publisher.Name</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private string user { get; set; }
+    private BookFull book { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User.Identity.Name;
+            book = await Http.GetFromJsonAsync<BookFull>($"/details/{id}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+}
+
+<style>
+
+    img {
+        width: 80%;
+        height: 80%;
+    }
+
+    .image {
+        width: 50%;
+        height: 50%;
+    }
+
+    table.normal {
+        border-style: none;
+        border-right-style: none;
+        border-left-style: none;
+    }
+
+    td.normal {
+        border-style: none;
+    }
+
+        td.normal:first-child {
+            border-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+
+        td.normal:last-child {
+            border-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+
+    h1 {
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .outside {
+        width: 100%;
+        border-collapse: separate;
+        table-layout: fixed;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        margin-left: auto;
+        margin-right: auto;
+        table-layout: fixed;
+    }
+
+    tr {
+        border-spacing: 10px;
+        vertical-align: top;
+        text-align: left;
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    td {
+        border: 2px solid;
+        border-style: solid none;
+        border-color: #a6a6a6;
+        padding: 11px;
+    }
+
+    .buttons {
+        width: 20%;
+    }
+
+    td:first-child {
+        border-left-style: solid;
+        border-top-left-radius: 11px;
+        border-bottom-left-radius: 11px;
+        border-color: #a6a6a6;
+    }
+
+    td:last-child {
+        border-right-style: solid;
+        border-bottom-right-radius: 11px;
+        border-top-right-radius: 11px;
+        border-color: #a6a6a6;
+    }
+
+    td {
+        padding: 20px;
+    }
+
+        td.image {
+            width: 230px;
+        }
+
+    button {
+        padding: 0px;
+        border: none;
+        border-radius: 50%;
+    }
+
+    .details {
+        background-image: url(/Images/InactiveArrow.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .details:hover {
+            background-image: url(/Images/ActiveArrow.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+
+    .comments {
+        background-image: url(/Images/InactiveComment.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .comments:hover {
+            background-image: url(/Images/ActiveComment.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+
+    .cart {
+        background-image: url(/Images/InactiveBasket.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .cart:hover {
+            background-image: url(/Images/ActiveBasket.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+</style>

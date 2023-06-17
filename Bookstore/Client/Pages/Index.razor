@@ -3,6 +3,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject HttpClient Http
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
 <h1><b>Available books:</b></h1>
@@ -17,13 +19,16 @@ else
         {
             <tr>
                 <td class="image">
-                    <img src="@book.Cover"/>
+                    <img src="@book.Cover" />
                 </td>
                 <td class="text">
+                    @if (book.Series != null)
+                    {
+                        <p style="font-size: 30px">@book.Series vol @book.Number</p>
+                    }
                     <p style="font-size: 30px">@book.Title</p>
-                    <p style="font-size: 25px">@book.Authors</p>
-                    <p style="font-size: 20px">@book.Year</p>
-                    @if (book.Status.StartsWith("U"))
+                    <p style="font-size: 25px">@string.Join(", ", book.Authors)</p>
+                    @if (!book.isAvailable())
                     {
                         <p style="color: #a6a6a6">
                             @book.Status
@@ -39,12 +44,8 @@ else
 
                 </td>
                 <td class="buttons">
-                    <button class="details" />
-                </td>
-                <td class="buttons">
-                    <button class="comments"/>
-                </td>
-                <td class="buttons">
+                    <button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" />
+                    <button class="comments" />
                     <button class="cart" />
                 </td>
             </tr>
@@ -54,17 +55,25 @@ else
 
 @code{
     private RetrieveBook[] books;
+    private string user;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User.Identity.Name;
             books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
+    }
+
+    private void OpenDetails(int id)
+    {
+        navigationManager.NavigateTo($"/details/{id}");
     }
 
 }
@@ -98,31 +107,39 @@ else
         font-size: 20px;
         padding: 10px;
     }
+
     td {
         border: 2px solid;
         border-style: solid none;
         border-color: #a6a6a6;
         padding: 11px;
     }
+
+    .buttons {
+        width: 20%;
+    }
+
     td:first-child {
         border-left-style: solid;
         border-top-left-radius: 11px;
         border-bottom-left-radius: 11px;
         border-color: #a6a6a6;
     }
+
     td:last-child {
         border-right-style: solid;
         border-bottom-right-radius: 11px;
         border-top-right-radius: 11px;
         border-color: #a6a6a6;
     }
+
     td {
         padding: 20px;
     }
 
-    td.image {
-        width: 230px;
-    }
+        td.image {
+            width: 230px;
+        }
 
     button {
         padding: 0px;
@@ -137,12 +154,12 @@ else
         height: 75px;
     }
 
-    .details:hover {
-        background-image: url(/Images/ActiveArrow.PNG);
-        background-size: cover;
-        width: 75px;
-        height: 75px;
-    }
+        .details:hover {
+            background-image: url(/Images/ActiveArrow.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
 
     .comments {
         background-image: url(/Images/InactiveComment.PNG);
@@ -151,12 +168,12 @@ else
         height: 75px;
     }
 
-    .comments:hover {
-        background-image: url(/Images/ActiveComment.PNG);
-        background-size: cover;
-        width: 75px;
-        height: 75px;
-    }
+        .comments:hover {
+            background-image: url(/Images/ActiveComment.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
 
     .cart {
         background-image: url(/Images/InactiveBasket.PNG);
@@ -165,12 +182,10 @@ else
         height: 75px;
     }
 
-    .cart:hover {
-        background-image: url(/Images/ActiveBasket.PNG);
-        background-size: cover;
-        width: 75px;
-        height: 75px;
-    }
-
-
+        .cart:hover {
+            background-image: url(/Images/ActiveBasket.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
 </style>

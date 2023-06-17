@@ -24,5 +24,11 @@ namespace Bookstore.Server.Controllers
         {
             return await _service.GetBooks();
         }
+
+        [HttpGet("/details/{id}")]
+        public async Task<BookFull> GetFullBookInfo(string id)
+        {
+            return await _service.GetFullBookInformation(int.Parse(id));
+        }
     }
 }
