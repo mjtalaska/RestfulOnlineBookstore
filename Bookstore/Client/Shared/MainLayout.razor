@@ -6,12 +6,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
 </head>
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <div class="main">
-        <div class="top-row px-4 auth">
+        <div class="upperMenu">
             <LoginDisplay />
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
@@ -21,3 +17,61 @@
         </div>
     </div>
 </div>
+
+<style>
+    div.upperMenu {
+        background-image: url(Images/UpperMenu.PNG);
+        background-size: 100%;
+        height: 150px;
+        background-repeat: no-repeat;
+        text-align: right;
+    }
+    button {
+        padding-right: 10px;
+        border: none;
+        border-radius: 50%;
+        margin-top: 20px;
+    }
+
+    .comment {
+        background-image: url(Images/CommentInactive.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .comment:hover {
+            background-image: url(Images/CommentActive.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+
+    .basket {
+        background-image: url(Images/BasketInactive.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .basket:hover {
+            background-image: url(Images/BasketActive.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+
+    .user {
+        background-image: url(Images/UserInactive.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .user:hover {
+            background-image: url(Images/UserActive.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+</style>

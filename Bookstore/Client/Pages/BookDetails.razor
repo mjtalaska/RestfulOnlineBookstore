@@ -11,12 +11,16 @@
 }
 else
 {
-    <h1><b>Details:</b></h1>
-    <p style="text-align: right; margin: 0;">
-        <button class="comments" />
-        <span style="padding-left: 20px" />
+
+
+<h1><b>Details:</b></h1><p style="text-align: right; margin: 0;">
+    @if (book.isAvailable())
+    {
         <button class="cart" />
-    </p>
+    }
+    <span style="padding-left: 20px" />
+    <button class="comments" />
+</p>
     <table class="normal">
         <tr class="normal">
             <td class="normal">
@@ -25,31 +29,33 @@ else
                         <td>
                             @if (!book.isAvailable())
                             {
-                                <p style="color: #a6a6a6">
-                                    @book.Status
+                                <p style="color: #a6a6a6; font-size: 30px">
+                                    <b>@book.Status</b>
                                 </p>
                             }
                             else
                             {
-                                <p style="color: #6600ff">
-                                    @book.Status
+                                <p style="color: #6600ff; font-size: 30px">
+                                    <b>@book.Status</b>
                                 </p>
-                                <p>
+                                <p style="font-size: 25px">
                                     Available amount: @book.Amount
                                 </p>
                             }
-                            <p>
+                            <p style="font-size: 25px">
                                 Price: @book.Price USD
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p>Genres:</p>
-                            @foreach (var genre in book.Genres)
-                            {
-                                <p>@genre</p>
-                            }
+                            <p style="font-size: 30px">Genres:</p>
+                            <ul>
+                                @foreach (var genre in book.Genres)
+                                {
+                                    <li style="color: #6600ff"><p style="font-size: 25px; color: black">@genre</p></li>
+                                }
+                            </ul>
                         </td>
                     </tr>
                 </table>

@@ -6,7 +6,12 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity.Name!</a>
+        <button class="comment" />
+        <span style="padding-left: 20px" />
+        <button class="basket" />
+        <span style="padding-left: 20px" />
+        <button class="user" />
+        <span style="padding-left: 20px" />
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
     </Authorized>
     <NotAuthorized>

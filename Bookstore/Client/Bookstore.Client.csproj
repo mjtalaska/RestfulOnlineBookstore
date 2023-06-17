@@ -5,8 +5,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Images\BasketActive.PNG" />
+    <Content Remove="wwwroot\Images\BasketInactive.PNG" />
+    <Content Remove="wwwroot\Images\CommentActive.PNG" />
+    <Content Remove="wwwroot\Images\CommentInactive.PNG" />
+    <Content Remove="wwwroot\Images\UserActive.PNG" />
+    <Content Remove="wwwroot\Images\UserInactive.PNG" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\Images\UpperMenu.PNG" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\Images\UpperMenu.PNG">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\Images\ActiveArrow.PNG" />
+    <None Include="wwwroot\Images\BasketActive.PNG" />
+    <None Include="wwwroot\Images\BasketInactive.PNG" />
+    <None Include="wwwroot\Images\CommentActive.PNG" />
+    <None Include="wwwroot\Images\CommentInactive.PNG" />
     <None Include="wwwroot\Images\InactiveArrow.PNG" />
+    <None Include="wwwroot\Images\UserActive.PNG" />
+    <None Include="wwwroot\Images\UserInactive.PNG" />
   </ItemGroup>
 
   <ItemGroup>
