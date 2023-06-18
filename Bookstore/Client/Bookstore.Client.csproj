@@ -14,10 +14,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Shared\Images\DeleteActive.PNG" />
+    <None Remove="Shared\Images\DeleteInactive.PNG" />
     <None Remove="Shared\Images\UpperMenu.PNG" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Shared\Images\DeleteActive.PNG">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Shared\Images\DeleteInactive.PNG">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Shared\Images\UpperMenu.PNG">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

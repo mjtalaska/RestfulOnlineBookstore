@@ -11,84 +11,97 @@
 }
 else
 {
-
-
-<h1><b>Details:</b></h1><p style="text-align: right; margin: 0;">
-    @if (book.isAvailable())
-    {
-        <button class="cart" />
-    }
-    <span style="padding-left: 20px" />
-    <button class="comments" />
-</p>
-    <table class="normal">
+    <table class="normal" style="width: 50%" align="right">
         <tr class="normal">
-            <td class="normal">
-                <table>
-                    <tr>
-                        <td>
-                            @if (!book.isAvailable())
-                            {
-                                <p style="color: #a6a6a6; font-size: 30px">
-                                    <b>@book.Status</b>
-                                </p>
-                            }
-                            else
-                            {
-                                <p style="color: #6600ff; font-size: 30px">
-                                    <b>@book.Status</b>
-                                </p>
-                                <p style="font-size: 25px">
-                                    Available amount: @book.Amount
-                                </p>
-                            }
-                            <p style="font-size: 25px">
-                                Price: @book.Price USD
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size: 30px">Genres:</p>
-                            <ul>
-                                @foreach (var genre in book.Genres)
-                                {
-                                    <li style="color: #6600ff"><p style="font-size: 25px; color: black">@genre</p></li>
-                                }
-                            </ul>
-                        </td>
-                    </tr>
-                </table>
+            <td class="normal" style="width: 30%; vertical-align: central">
+                <p style="font-family: 'Poppins', sans-serif; font-size: 40px"><b>Details:</b></p>
             </td>
-            <td class="normal" style="width: 75%">
-                <table>
-                    <tr>
-                        <td class="image">
-                            <img src="@book.Cover" />
-                        </td>
-                        <td style="width: 50%">
-                            @if (book.Series != null)
-                            {
-                                <p style="font-size: 50px">@book.Series vol @book.Number</p>
-                            }
-                            <p style="font-size: 50px">@book.Title</p>
-                            <p style="font-size: 40px">Authors: @string.Join(", ", book.Authors)</p>
-                            <p style="font-size: 30px">Year:  @book.Year</p>
-                            <p style="font-size: 30px">Original Language:  @book.Language</p>
-                            <p style="font-size: 30px">Publisher: <a href="@book.Publisher.WebAddress">@book.Publisher.Name</a></p>
-                        </td>
-                    </tr>
-                </table>
+            <td class="normal" style="width: 40%; vertical-align: bottom">
+                @if (response != null)
+                {
+                    <p style="color: #c604fc; font-family: 'Poppins', sans-serif; font-size: 20px"><b>@response</b></p>
+                    <span style="padding-left: 20px" />
+                }
+            </td>
+            <td class="normal" style="width: 30%; vertical-align: text-top">
+                @if (book.isAvailable())
+                {
+                    <button class="cart" @onclick="@(() => { AddToCart(book); })" />
+                    <span style="margin-left: 20px"/>
+                }
+                <button class="comments" />
             </td>
         </tr>
     </table>
-}
+        <table class="normal">
+            <tr class="normal">
+                <td class="normal">
+                    <table>
+                        <tr>
+                            <td>
+                                @if (!book.isAvailable())
+                                {
+                                    <p style="color: #a6a6a6; font-size: 30px">
+                                        <b>@book.Status</b>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p style="color: #6600ff; font-size: 30px">
+                                        <b>@book.Status</b>
+                                    </p>
+                                    <p style="font-size: 25px">
+                                        Available amount: @book.Amount
+                                    </p>
+                                }
+                                <p style="font-size: 25px">
+                                    Price: @book.Price USD
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="font-size: 30px">Genres:</p>
+                                <ul>
+                                    @foreach (var genre in book.Genres)
+                                    {
+                                        <li style="color: #6600ff"><p style="font-size: 25px; color: black">@genre</p></li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="normal" style="width: 75%">
+                    <table>
+                        <tr>
+                            <td class="image">
+                                <img src="@book.Cover" />
+                            </td>
+                            <td style="width: 50%">
+                                @if (book.Series != null)
+                                {
+                                    <p style="font-size: 50px">@book.Series vol @book.Number</p>
+                                }
+                                <p style="font-size: 50px">@book.Title</p>
+                                <p style="font-size: 40px">Authors: @string.Join(", ", book.Authors)</p>
+                                <p style="font-size: 30px">Year:  @book.Year</p>
+                                <p style="font-size: 30px">Original Language:  @book.Language</p>
+                                <p style="font-size: 30px">Publisher: <a href="@book.Publisher.WebAddress">@book.Publisher.Name</a></p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    }
 
 @code {
     [Parameter]
     public string id { get; set; }
     private string user { get; set; }
     private BookFull book { get; set; }
+    private string response { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -102,6 +115,11 @@ else
         {
             exception.Redirect();
         }
+    }
+    private async void AddToCart(RetrieveBook book)
+    {
+        var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
+        response = await result.Content.ReadAsStringAsync();
     }
 }
 
@@ -138,11 +156,6 @@ else
             border-right-style: none;
             border-left-style: none;
         }
-
-    h1 {
-        text-align: center;
-        font-family: 'Poppins', sans-serif;
-    }
 
     .outside {
         width: 100%;

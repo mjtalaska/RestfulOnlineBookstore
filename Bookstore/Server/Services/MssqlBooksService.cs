@@ -63,5 +63,76 @@ namespace Bookstore.Server.Services
 
             return query;
         }
+
+        public async Task<int> AddBookToBasket(int bookId, string userName)
+        {
+            using(var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                var userId =  _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).First();
+                var isInBasket = await _context.Carts.Where(e => e.BookId == bookId && e.UserId.Equals(userId)).FirstOrDefaultAsync();
+                var status = await _context.Books.Where(e => e.BookId == bookId).Select(e => e.Status.Name).FirstAsync();
+
+                if (status.Equals("Unavailable"))
+                {
+                    await transaction.RollbackAsync();
+                    return -1;
+                }
+
+                if (isInBasket == null)
+                {
+                    await _context.Carts.AddAsync(new Cart
+                    {
+                        BookId = bookId,
+                        UserId = userId,
+                        Amount = 1
+                    });
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return 1;
+                }
+                else
+                {
+                    var book = await _context.Books.Where(e => e.BookId == bookId).FirstAsync();
+                    isInBasket.Amount = book.amountOrMaxAvailable(isInBasket.Amount + 1);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return 2;
+                }
+            }
+        }
+
+        public async Task<IEnumerable<BookInCart>> GetBooksInCart(string userName)
+        {
+            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+            var usersCart = await _context.Carts.Where(e => e.UserId.Equals(userId)).Select(e => new BookInCart
+            {
+                BookId = e.BookId,
+                Title = e.Book.Title,
+                Series = e.Book.BookInSeries.Series.Name,
+                Number = e.Book.BookInSeries.Number,
+                Price = e.Book.Price,
+                Amount = e.Amount,
+                Cover = e.Book.Cover,
+                MaxAmount = e.Book.Amount
+            }).ToArrayAsync();
+            return usersCart;
+        }
+
+        public async Task<int> SaveCartChanges(string userName, BookInCart[] booksInCart)
+        {
+            var userId = _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).First();
+
+            using(var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                var pastBooksInCart = await _context.Carts.Where(e => e.UserId.Equals(userId)).ToListAsync();
+                pastBooksInCart.ForEach(e => e.Amount = booksInCart.Where(s => s.BookId == e.BookId).First().Amount);
+                var booksToDelete = pastBooksInCart.Where(e => e.Amount == 0).ToList();
+                _context.RemoveRange(booksToDelete);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return 1;
+            }
+        }
+
     }
 }

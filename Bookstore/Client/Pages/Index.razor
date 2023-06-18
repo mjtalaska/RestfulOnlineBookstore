@@ -14,48 +14,78 @@
 }
 else
 {
-    <table>
-        @foreach (var book in books)
-        {
-            <tr>
-                <td class="image">
-                    <img src="@book.Cover" />
-                </td>
-                <td class="text">
-                    @if (book.Series != null)
-                    {
-                        <p style="font-size: 30px">@book.Series vol @book.Number</p>
-                    }
-                    <p style="font-size: 30px">@book.Title</p>
-                    <p style="font-size: 25px">@string.Join(", ", book.Authors)</p>
-                    @if (!book.isAvailable())
-                    {
-                        <p style="color: #a6a6a6">
-                            @book.Status
-                        </p>
-                    }
-                    else
-                    {
-                        <p style="color: #6600ff">
-                            @book.Status
-                        </p>
-                    }
-                    <div style="text-align: left">@string.Join(" ", book.Genres)</div>
+    <table class="normal">
+        <tr class="normal">
+            <td class="normal">
 
-                </td>
-                <td class="buttons">
-                    <button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" />
-                    <button class="comments" />
-                    <button class="cart" />
-                </td>
-            </tr>
-        }
+            </td>
+            <td class="normal" style="width: 50%">
+                <table>
+                    @foreach (var book in books)
+                    {
+                        <tr>
+                            <td class="image">
+                                <img src="@book.Cover" />
+                            </td>
+                            <td class="text">
+                                @if (book.Series != null)
+                                {
+                                    <p style="font-size: 30px">@book.Series vol @book.Number</p>
+                                }
+                                <p style="font-size: 30px">@book.Title</p>
+                                <p style="font-size: 25px">@string.Join(", ", book.Authors)</p>
+                                @if (!book.isAvailable())
+                                {
+                                    <p style="color: #a6a6a6">
+                                        @book.Status
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p style="color: #6600ff">
+                                        @book.Status
+                                    </p>
+                                }
+                                <div style="text-align: left">@string.Join(" ", book.Genres)</div>
+                            </td>
+                            <td class="buttons">
+                                <button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" />
+                                <button class="comments" />
+                                @if (book.isAvailable())
+                                {
+                                    <button class="cart" @onclick="@(() => { AddToCart(book); })" />
+                                }
+                            </td>
+                        </tr>
+                        @if (addedBookId == book.BookId)
+                        {
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td>
+                                    <p style="vertical-align:bottom; color: #c604fc; text-align: center; font-family: 'Poppins', sans-serif;"><b>@response</b></p>
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </td>
+            <td class="normal">
+
+            </td>
+        </tr>
     </table>
 }
 
 @code{
     private RetrieveBook[] books;
     private string user;
+    private string response;
+    private int addedBookId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,10 +106,37 @@ else
         navigationManager.NavigateTo($"/details/{id}");
     }
 
+    private async void AddToCart(RetrieveBook book)
+    {
+        var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
+        response = await result.Content.ReadAsStringAsync();
+        addedBookId = book.BookId;
+    }
+
 }
 
 <style>
+    table.normal {
+        border-style: none;
+        border-right-style: none;
+        border-left-style: none;
+    }
 
+    td.normal {
+        border-style: none;
+    }
+
+        td.normal:first-child {
+            border-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+
+        td.normal:last-child {
+            border-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
     img {
         width: 110%;
         height: 110%;
@@ -91,11 +148,12 @@ else
     }
 
     table {
-        width: 60%;
+        width: 100%;
         border-collapse: separate;
         border-spacing: 0 10px;
         margin-left: auto;
         margin-right: auto;
+        table-layout: fixed;
     }
 
     tr {

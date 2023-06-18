@@ -1,0 +1,184 @@
+﻿@page "/cart/{userName}"
+@using Bookstore.Shared.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (booksInCart == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p style="font-size: 50px; color: #6600ff; text-align: center "><b>Sum: @(booksInCart.Select(e => e.Amount*e.Price).Sum()) USD</b></p>
+    <div style="text-align: center">
+        <button class="saveChanges" @onclick="SaveChanges"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;">Save Changes</b></button>
+        <button class="saveChanges"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;">Go to checkout</b></button>
+    </div>
+    @if (booksInCart.Length == 0)
+    {
+        <p style="font-size: 50px; color: black; text-align: center "><b>Your cart is currently empty!</b></p>
+    }
+    <table style="width: 50%">
+        @foreach (BookInCart book in booksInCart)
+        {
+            @if (book.Amount != 0)
+            {
+                <tr>
+                    <td class="image" style="width: 20%">
+                        <img src="@book.Cover" />
+                    </td>
+                    <td class="text">
+                        @if (book.Series != null)
+                        {
+                            <p style="font-size: 30px">@book.Series vol. @book.Number</p>
+                        }
+                        <p style="font-size: 30px">@book.Title</p>
+                    </td>
+                    <td>
+                        <p style="font-size: 20px">Price per one: @book.Price USD</p>
+                        <p style="font-size: 20px">Amount in cart: @book.Amount</p>
+                        <p style="font-size: 20px">Estimated cost: @(book.Price * book.Amount) USD</p>
+                    </td>
+                    <td style="width: 15%">
+                        <button class="delete" @onclick="@(() => { OnDelete(book); })" />
+                        <input type="range" class="slider" min="1" max="@book.MaxAmount" step="1" @bind="@book.Amount" />
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string userName { get; set; }
+    private BookInCart[] booksInCart { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            booksInCart = await Http.GetFromJsonAsync<BookInCart[]>($"/cart/{userName}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private void OnDelete(BookInCart book)
+    {
+        book.Amount = 0;
+    }
+
+    private async void SaveChanges()
+    {
+        var result = await Http.PostAsJsonAsync($"/cart/change/{userName}", booksInCart);
+    }
+}
+
+<style>
+    img {
+        width: 100%;
+        height: 100%;
+    }
+
+    p {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        margin-left: auto;
+        margin-right: auto;
+        table-layout: fixed;
+    }
+
+    tr {
+        border-spacing: 10px;
+        vertical-align: top;
+        text-align: left;
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    td {
+        border: 2px solid;
+        border-style: solid none;
+        border-color: #a6a6a6;
+        padding: 11px;
+    }
+
+        td:first-child {
+            border-left-style: solid;
+            border-top-left-radius: 11px;
+            border-bottom-left-radius: 11px;
+            border-color: #a6a6a6;
+        }
+
+        td:last-child {
+            border-right-style: solid;
+            border-bottom-right-radius: 11px;
+            border-top-right-radius: 11px;
+            border-color: #a6a6a6;
+        }
+
+    .saveChanges {
+        width: 20%;
+        height: 200%;
+        background: #a6a6a6;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .saveChanges:hover {
+            width: 20%;
+            height: 200%;
+            background: #6600ff;
+            color: white;
+        }
+
+    .delete {
+        padding-right: 20px;
+        border: none;
+        border-radius: 50%;
+        text-align: center;
+        background-image: url(/Images/DeleteInactive.PNG);
+        background-size: cover;
+        width: 75px;
+        height: 75px;
+    }
+
+        .delete:hover {
+            background-image: url(/Images/DeleteActive.PNG);
+            background-size: cover;
+            width: 75px;
+            height: 75px;
+        }
+
+    .slider {
+        -webkit-appearance: none;
+        height: 3px;
+        background: #6600ff;
+        width: 90%;
+        border-radius: 50%;
+    }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6600ff;
+            cursor: pointer;
+        }
+</style>

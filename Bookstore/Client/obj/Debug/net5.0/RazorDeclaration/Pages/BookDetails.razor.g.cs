@@ -112,12 +112,13 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 87 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\BookDetails.razor"
+#line 99 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\BookDetails.razor"
        
     [Parameter]
     public string id { get; set; }
     private string user { get; set; }
     private BookFull book { get; set; }
+    private string response { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -131,6 +132,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         {
             exception.Redirect();
         }
+    }
+    private async void AddToCart(RetrieveBook book)
+    {
+        var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
+        response = await result.Content.ReadAsStringAsync();
     }
 
 #line default
