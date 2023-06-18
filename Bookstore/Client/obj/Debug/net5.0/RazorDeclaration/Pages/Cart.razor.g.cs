@@ -116,7 +116,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
        
     [Parameter]
     public string userName { get; set; }
-    private BookInCart[] booksInCart { get; set; }
+    private BookInCart[] booksInCart;
 
     protected override async Task OnInitializedAsync()
     {

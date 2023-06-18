@@ -116,9 +116,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
        
     [Parameter]
     public string id { get; set; }
-    private string user { get; set; }
-    private BookFull book { get; set; }
-    private string response { get; set; }
+    private string user;
+    private BookFull book;
+    private string response;
 
     protected override async Task OnInitializedAsync()
     {

@@ -58,5 +58,11 @@ namespace Bookstore.Server.Controllers
             var result = await _service.SaveCartChanges(userName, booksInCart);
             return Ok(result);
         }
+
+        [HttpGet("/filters/{text}")]
+        public async Task<Filters> GetAvailableFilters(string text)
+        {
+            return await _service.GetAvailableFilters(text);
+        }
     }
 }

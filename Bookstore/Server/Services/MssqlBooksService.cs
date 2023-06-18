@@ -20,7 +20,7 @@ namespace Bookstore.Server.Services
 
         public async Task<IEnumerable<RetrieveBook>> GetBooks()
         {
-            var query2 = await _context.Books
+            var books = await _context.Books
                 .Select(e => 
                 new RetrieveBook 
                 { 
@@ -34,12 +34,12 @@ namespace Bookstore.Server.Services
                     Number = e.BookInSeries.Number
                 })
                 .ToArrayAsync();
-            return query2;
+            return books;
         }
 
         public async Task<BookFull> GetFullBookInformation(int id)
         {
-            var query = await _context.Books
+            var book = await _context.Books
                 .Where(e => e.BookId == id)
                 .Select(e => new BookFull
                 { 
@@ -61,7 +61,7 @@ namespace Bookstore.Server.Services
                 })
                 .FirstAsync();
 
-            return query;
+            return book;
         }
 
         public async Task<int> AddBookToBasket(int bookId, string userName)
@@ -132,6 +132,26 @@ namespace Bookstore.Server.Services
                 await transaction.CommitAsync();
                 return 1;
             }
+        }
+
+        public async Task<Filters> GetAvailableFilters(string text)
+        {
+            var books = await _context.Books
+                .ToArrayAsync();
+            var genres = await _context.Genres.Select(e => e.Name).ToArrayAsync();
+            var languages = await _context.Languages.Select(e => e.Name).ToArrayAsync();
+
+            Filters filters = new Filters
+            {
+                Genres = genres,
+                Languages = languages,
+                MaxPrice = books.Select(e => e.Price).Max(),
+                MinPrice = books.Select(e => e.Price).Min(),
+                AvailableOnly = false,
+                PartOfSeries = false
+            };
+
+            return filters;
         }
 
     }

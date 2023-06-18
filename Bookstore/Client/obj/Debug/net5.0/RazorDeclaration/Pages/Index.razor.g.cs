@@ -119,25 +119,38 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 84 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
+#line 94 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
       
-    private RetrieveBook[] books;
-    private string user;
-    private string response;
-    private int addedBookId;
+        private RetrieveBook[] books;
+        private Filters filters;
+        private Filters newFilters;
+        private string user;
+        private string response;
+        private int addedBookId;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
+        protected override async Task OnInitializedAsync()
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            user = authState.User.Identity.Name;
-            books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+            try
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                user = authState.User.Identity.Name;
+                books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
+                filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+
+            newFilters = new Filters
+            {
+                Genres = new List<string>(),
+                Languages = new List<string>(),
+                MaxPrice = filters.MaxPrice,
+                MinPrice = filters.MinPrice,
+                AvailableOnly = false,
+                PartOfSeries = false
+            };
     }
 
     private void OpenDetails(int id)
@@ -150,6 +163,16 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
         response = await result.Content.ReadAsStringAsync();
         addedBookId = book.BookId;
+    }
+
+    private void AddGenre(string genre)
+    {
+        newFilters.Genres.Add(genre);
+    }
+
+    private void RemoveGenre(string genre)
+    {
+        newFilters.Genres.Remove(genre);
     }
 
 

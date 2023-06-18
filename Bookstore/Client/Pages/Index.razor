@@ -14,12 +14,25 @@
 }
 else
 {
-    <table class="normal">
+    <table class="normal" style="width:90%">
         <tr class="normal">
-            <td class="normal">
-
+            <td class="normal" style="width: 30%">
+                <table>
+                    <tr>
+                        <td>
+                            @foreach(var genre in filters.Genres)
+                            {
+                                <input type="checkbox" @onactivate="@(() => { AddGenre(genre); })" @ondeactivate="@(() => { RemoveGenre(genre); })"/><label>@genre</label><br />
+                            }
+                        </td>
+                    </tr>
+                </table>
             </td>
-            <td class="normal" style="width: 50%">
+            <td class="normal" style="width: 70%">
+                @if (books.Length == 0)
+                {
+                    <p style="font-size: 30px">There are no books matching your filters</p>
+                }
                 <table>
                     @foreach (var book in books)
                     {
@@ -74,31 +87,41 @@ else
                     }
                 </table>
             </td>
-            <td class="normal">
-
-            </td>
         </tr>
     </table>
 }
 
 @code{
-    private RetrieveBook[] books;
-    private string user;
-    private string response;
-    private int addedBookId;
+        private RetrieveBook[] books;
+        private Filters filters;
+        private Filters newFilters;
+        private string user;
+        private string response;
+        private int addedBookId;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
+        protected override async Task OnInitializedAsync()
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            user = authState.User.Identity.Name;
-            books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+            try
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                user = authState.User.Identity.Name;
+                books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
+                filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
+            }
+            catch (AccessTokenNotAvailableException exception)
+            {
+                exception.Redirect();
+            }
+
+            newFilters = new Filters
+            {
+                Genres = new List<string>(),
+                Languages = new List<string>(),
+                MaxPrice = filters.MaxPrice,
+                MinPrice = filters.MinPrice,
+                AvailableOnly = false,
+                PartOfSeries = false
+            };
     }
 
     private void OpenDetails(int id)
@@ -113,9 +136,22 @@ else
         addedBookId = book.BookId;
     }
 
+    private void AddGenre(string genre)
+    {
+        newFilters.Genres.Add(genre);
+    }
+
+    private void RemoveGenre(string genre)
+    {
+        newFilters.Genres.Remove(genre);
+    }
+
 }
 
 <style>
+    p {
+        font-family: 'Poppins', sans-serif;
+    }
     table.normal {
         border-style: none;
         border-right-style: none;
