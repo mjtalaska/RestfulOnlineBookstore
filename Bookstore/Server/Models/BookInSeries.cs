@@ -20,5 +20,10 @@ namespace Bookstore.Server.Models
 
         public virtual Book Book { get; set; }
         public virtual Series Series { get; set; }
+
+        public Boolean IsInSeries(Book book)
+        {
+            return Book.Equals(book);
+        }
     }
 }

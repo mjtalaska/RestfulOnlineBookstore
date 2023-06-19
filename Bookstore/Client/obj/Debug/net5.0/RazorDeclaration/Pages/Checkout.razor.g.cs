@@ -90,21 +90,21 @@ using Bookstore.Client.Shared;
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Cart.razor"
+#line 2 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Checkout.razor"
 using Bookstore.Shared.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Cart.razor"
+#line 3 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Checkout.razor"
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/cart/{userName}")]
-    public partial class Cart : Microsoft.AspNetCore.Components.ComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/checkout/{userName}")]
+    public partial class Checkout : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
@@ -112,19 +112,18 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 54 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Cart.razor"
+#line 24 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Checkout.razor"
        
     [Parameter]
     public string userName { get; set; }
-    private BookInCart[] booksInCart;
     private decimal? final;
+    private string? message;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            booksInCart = await Http.GetFromJsonAsync<BookInCart[]>($"/cart/{userName}");
             final = await Http.GetFromJsonAsync<decimal>($"/checkout/{userName}");
         }
         catch (AccessTokenNotAvailableException exception)
@@ -133,22 +132,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
     }
 
-    private void OnDelete(BookInCart book)
+    private async void finalizeTransaction()
     {
-        book.Amount = 0;
+        var result = await Http.PostAsJsonAsync($"/checkout/{userName}", final);
+        message = await result.Content.ReadAsStringAsync();
     }
-
-    private async void SaveChanges()
-    {
-        booksInCart.ToList().ForEach(e => e.Amount = e.AmountOrMaxAvailable());
-        var result = await Http.PostAsJsonAsync($"/cart/change/{userName}", booksInCart.ToArray());
-    }
-
-    private void GoToCheckout()
-    {
-        navigationManager.NavigateTo($"/checkout/{userName}");
-    }
-
 
 #line default
 #line hidden

@@ -64,5 +64,18 @@ namespace Bookstore.Server.Controllers
         {
             return await _service.GetAvailableFilters(text);
         }
+
+        [HttpGet("/checkout/{userName}")]
+        public async Task<decimal> GetFinalPrice(string userName)
+        {
+            return await _service.GetFinalPrice(userName);
+        }
+
+        [HttpPost("/checkout/{userName}")]
+        public async Task<IActionResult> PurchaseBooksInCart(string userName, decimal final)
+        {
+            var result = await _service.Purchase(userName);
+            return Ok($"Finalized transaction for {final} USD");
+        }
     }
 }

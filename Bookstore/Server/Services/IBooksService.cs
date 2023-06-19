@@ -15,5 +15,7 @@ namespace Bookstore.Server.Services
         public Task<int> AddBookToBasket(int bookId, string userName);
         public Task<IEnumerable<BookInCart>> GetBooksInCart(string userName);
         public Task<int> SaveCartChanges(string userName, BookInCart[] booksInCart);
+        public Task<decimal> GetFinalPrice(string userName);
+        public Task<int> Purchase(string userName);
     }
 }

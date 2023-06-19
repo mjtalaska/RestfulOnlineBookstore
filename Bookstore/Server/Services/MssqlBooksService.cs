@@ -68,7 +68,7 @@ namespace Bookstore.Server.Services
         {
             using(var transaction = await _context.Database.BeginTransactionAsync())
             {
-                var userId =  _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).First();
+                var userId =  await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
                 var isInBasket = await _context.Carts.Where(e => e.BookId == bookId && e.UserId.Equals(userId)).FirstOrDefaultAsync();
                 var status = await _context.Books.Where(e => e.BookId == bookId).Select(e => e.Status.Name).FirstAsync();
 
@@ -93,7 +93,7 @@ namespace Bookstore.Server.Services
                 else
                 {
                     var book = await _context.Books.Where(e => e.BookId == bookId).FirstAsync();
-                    isInBasket.Amount = book.amountOrMaxAvailable(isInBasket.Amount + 1);
+                    isInBasket.Amount = book.AmountOrMaxAvailable(isInBasket.Amount + 1);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return 2;
@@ -120,7 +120,7 @@ namespace Bookstore.Server.Services
 
         public async Task<int> SaveCartChanges(string userName, BookInCart[] booksInCart)
         {
-            var userId = _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).First();
+            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
 
             using(var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -152,6 +152,62 @@ namespace Bookstore.Server.Services
             };
 
             return filters;
+        }
+
+        public async Task<decimal> GetFinalPrice(string userName)
+        {
+            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+            var books = await _context.Carts.Where(e => e.UserId.Equals(userId)).ToListAsync();
+            var fullSeries = await _context.BooksInSeries.Where(e => books.Select(e => e.BookId).Contains(e.BookId))
+                .Join(_context.Series, e => e.SeriesId, k => k.SeriesId, (e, k) => new { SeriesId = e.SeriesId, FullSeriesAmount = k.Books.Count })
+                .Distinct()
+                .ToListAsync();
+            List<Cart> booksInSeries = new List<Cart>();
+            var possibleSeries = books.Join(_context.BooksInSeries, e => e.BookId, k => k.BookId, (e, k) => new { BookId = e.BookId, SeriesId = k.SeriesId }).ToArray();
+            foreach (var series in fullSeries)
+            {
+                var possible = possibleSeries.Where(e => e.SeriesId == series.SeriesId);
+                if (series.FullSeriesAmount == possible.Count())
+                {
+                    var booksToAdd = books.Where(e => possible.Select(s => s.BookId).Contains(e.BookId)).ToList();
+                    booksInSeries.AddRange(booksToAdd);
+                }
+            }
+            decimal sum = 0;
+            booksInSeries.Join(_context.Books, e => e.BookId, k => k.BookId, (e, k) => new { Price = k.Price, Amount = e.Amount }).ToList().ForEach(e => sum += e.Price * e.Amount * 0.9M);
+            books.Except(booksInSeries).Join(_context.Books, e => e.BookId, k => k.BookId, (e,k) => new { Price = k.Price, Amount = e.Amount}).ToList().ForEach(e => sum += e.Price * e.Amount);
+
+            return decimal.Round(sum, 2, MidpointRounding.AwayFromZero);
+        }
+
+        public async Task<int> Purchase(string userName)
+        {
+            using(var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+                var cart = await _context.Carts.Where(e => e.UserId.Equals(userId)).Join(_context.Books, e => e.BookId, k => k.BookId, (e,k) => new { Book = k, Cart = e}).ToListAsync();
+                List<Purchase> purchases = new List<Purchase>();
+                cart.ForEach(e =>
+                {
+                    for (int i = 0; i < e.Cart.Amount; i++)
+                    {
+                        purchases.Add(new Purchase
+                        {
+                            BookId = e.Cart.BookId,
+                            UserId = e.Cart.UserId,
+                            PurchaseDate = DateTime.Now
+                        });
+
+                        e.Book.UpadateAmount(-1);
+                    }
+                });
+                await _context.Books.ForEachAsync(e => e.updateStatus());
+                await _context.AddRangeAsync(purchases);
+                _context.Carts.RemoveRange(cart.Select(e => e.Cart).ToList());
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            return 0;
         }
 
     }

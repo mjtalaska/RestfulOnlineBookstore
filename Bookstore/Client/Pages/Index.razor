@@ -47,7 +47,7 @@ else
                                 }
                                 <p style="font-size: 30px">@book.Title</p>
                                 <p style="font-size: 25px">@string.Join(", ", book.Authors)</p>
-                                @if (!book.isAvailable())
+                                @if (!book.IsAvailable())
                                 {
                                     <p style="color: #a6a6a6">
                                         @book.Status
@@ -64,7 +64,7 @@ else
                             <td class="buttons">
                                 <button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" />
                                 <button class="comments" />
-                                @if (book.isAvailable())
+                                @if (book.IsAvailable())
                                 {
                                     <button class="cart" @onclick="@(() => { AddToCart(book); })" />
                                 }

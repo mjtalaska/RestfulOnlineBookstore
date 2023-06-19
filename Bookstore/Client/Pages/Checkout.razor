@@ -1,0 +1,71 @@
+﻿@page "/checkout/{userName}"
+@using Bookstore.Shared.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (final == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p style="font-size: 50px; text-align: center "><b>Final: <b style="color: #6600ff">@final</b> USD</b></p>
+    <div style="text-align: center">
+        <button class="finalize" @onclick="finalizeTransaction"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;">Finalize transaction</b></button>
+    </div>
+    @if (message != null)
+    {
+        <p style="font-size: 50px; text-align: center; color: #6600ff"><b>@message</b></p>
+    }
+}
+
+@code {
+    [Parameter]
+    public string userName { get; set; }
+    private decimal? final;
+    private string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            final = await Http.GetFromJsonAsync<decimal>($"/checkout/{userName}");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async void finalizeTransaction()
+    {
+        var result = await Http.PostAsJsonAsync($"/checkout/{userName}", final);
+        message = await result.Content.ReadAsStringAsync();
+    }
+}
+
+<style>
+    p {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .finalize {
+        width: 20%;
+        height: 20%;
+        background: #a6a6a6;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .finalize:hover {
+            width: 20%;
+            height: 20%;
+            background: #6600ff;
+            color: white;
+        }
+</style>

@@ -17,7 +17,7 @@ namespace Bookstore.Shared.Models
         public int? Number { get; set; }
         public string? Series { get; set; }
 
-        public Boolean isAvailable()
+        public Boolean IsAvailable()
         {
             return Status.Equals("Available");
         }

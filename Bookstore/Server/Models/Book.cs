@@ -49,7 +49,7 @@ namespace Bookstore.Server.Models
         public virtual ICollection<BookBookType> Type { get; set; }
         public virtual ICollection<BookGenre> Genres { get; set; }
 
-        public Boolean isAvailable()
+        public Boolean IsAvailable()
         {
             if (Status.Name.Equals("Available"))
             {
@@ -58,14 +58,26 @@ namespace Bookstore.Server.Models
             return false;
         }
 
-        public int amountOrMaxAvailable(int orderedAmount)
+        public int AmountOrMaxAvailable(int orderedAmount)
         {
             return (orderedAmount <= Amount) ? orderedAmount : Amount;
         }
 
-        public void upadateAmount(int changeAmount)
+        public void UpadateAmount(int changeAmount)
         {
             Amount += changeAmount;
+        }
+
+        public void updateStatus()
+        {
+            if(Amount <= 0)
+            {
+                StatusId = 2;
+            }
+            else
+            {
+                StatusId = 1;
+            }
         }
     }
 }

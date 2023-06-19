@@ -16,5 +16,10 @@ namespace Bookstore.Shared.Models
         public int Amount { get; set; }
         public int MaxAmount { get; set; }
         public decimal Price { get; set; }
+
+        public int AmountOrMaxAvailable()
+        {
+            return (Amount <= MaxAmount) ? Amount : MaxAmount;
+        }
     }
 }

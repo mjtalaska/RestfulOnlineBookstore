@@ -649,3 +649,5 @@ C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\ob
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Razor\Pages\BookDetails.razor.g.cs
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Cart.razor.g.cs
 C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Razor\Pages\Cart.razor.g.cs
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Checkout.razor.g.cs
+C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\obj\Debug\net5.0\Razor\Pages\Checkout.razor.g.cs

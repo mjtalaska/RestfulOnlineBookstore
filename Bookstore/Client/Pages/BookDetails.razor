@@ -24,7 +24,7 @@ else
                 }
             </td>
             <td class="normal" style="width: 30%; vertical-align: text-top">
-                @if (book.isAvailable())
+                @if (book.IsAvailable())
                 {
                     <button class="cart" @onclick="@(() => { AddToCart(book); })" />
                     <span style="margin-left: 20px"/>
@@ -39,7 +39,7 @@ else
                     <table>
                         <tr>
                             <td>
-                                @if (!book.isAvailable())
+                                @if (!book.IsAvailable())
                                 {
                                     <p style="color: #a6a6a6; font-size: 30px">
                                         <b>@book.Status</b>
