@@ -80,8 +80,8 @@ namespace Bookstore.Server.Controllers
         [HttpPost("/checkout/{userName}")]
         public async Task<IActionResult> PurchaseBooksInCart(string userName, decimal final)
         {
-            var result = await _service.Purchase(userName);
-            return Ok($"Succesfully finalized the transaction for {final} USD");
+            await _service.Purchase(userName);
+            return Ok($"Succesfully finalized the transaction");
         }
     }
 }
