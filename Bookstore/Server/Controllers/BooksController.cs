@@ -26,7 +26,7 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filters filter)
+        public async Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filter filter)
         {
             return await _service.GetBooksByFilter(filter);
         }
@@ -66,7 +66,7 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpGet("/filters/{text}")]
-        public async Task<Filters> GetAvailableFilters(string text)
+        public async Task<Filter> GetAvailableFilters(string text)
         {
             return await _service.GetAvailableFilters(text);
         }
@@ -81,7 +81,7 @@ namespace Bookstore.Server.Controllers
         public async Task<IActionResult> PurchaseBooksInCart(string userName, decimal final)
         {
             var result = await _service.Purchase(userName);
-            return Ok($"Succesfully finalized the transaction");
+            return Ok($"Succesfully finalized the transaction for {final} USD");
         }
     }
 }

@@ -122,8 +122,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 #line 127 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Index.razor"
       
     private RetrieveBook[] books;
-    private Filters filters;
-    private Filters newFilters;
+    private Filter filter;
+    private Filter nfilter;
     private string user;
     private string response;
     private int addedBookId;
@@ -135,19 +135,19 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = authState.User.Identity.Name;
             books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
-            filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
+            filter = await Http.GetFromJsonAsync<Filter>($"/filters/over");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
 
-        newFilters = new Filters
+        nfilter = new Filter
         {
             Genres = new List<string>(),
             Languages = new List<string>(),
-            MaxPrice = filters.MaxPrice,
-            MinPrice = filters.MinPrice,
+            MaxPrice = filter.MaxPrice,
+            MinPrice = filter.MinPrice,
             AvailableOnly = false,
             PartOfSeries = false
         };
@@ -168,33 +168,33 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
     private void ChangeGenre(string genre)
     {
-        if (newFilters.Genres.Contains(genre))
+        if (nfilter.Genres.Contains(genre))
         {
-            newFilters.Genres.Remove(genre);
+            nfilter.Genres.Remove(genre);
         }
         else
         {
-            newFilters.Genres.Add(genre);
+            nfilter.Genres.Add(genre);
         }
         StateHasChanged();
     }
 
     private void ChangeLanguage(string language)
     {
-        if (newFilters.Languages.Contains(language))
+        if (nfilter.Languages.Contains(language))
         {
-            newFilters.Languages.Remove(language);
+            nfilter.Languages.Remove(language);
         }
         else
         {
-            newFilters.Languages.Add(language);
+            nfilter.Languages.Add(language);
         }
         StateHasChanged();
     }
 
     private async void FilterBooks()
     {
-        var result = await Http.PostAsJsonAsync("books", newFilters);
+        var result = await Http.PostAsJsonAsync("books", nfilter);
         books = await result.Content.ReadFromJsonAsync<RetrieveBook[]>();
         StateHasChanged();
     }

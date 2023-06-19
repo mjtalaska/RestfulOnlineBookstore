@@ -21,14 +21,14 @@ else
                     <tr>
                         <td>
                             <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Price Range</b></div>
-                            <label>Max Price = @newFilters.MaxPrice</label><input type="range" class="slider" min="@newFilters.MinPrice" max="@filters.MaxPrice" step="1" @bind="@newFilters.MaxPrice" /><br />
-                            <label>Min Price = @newFilters.MinPrice</label><input type="range" class="slider" min="0" max="@newFilters.MaxPrice " step="1" @bind="@newFilters.MinPrice" />
+                            <label>Max Price = @nfilter.MaxPrice</label><input type="range" class="slider" min="@nfilter.MinPrice" max="@filter.MaxPrice" step="1" @bind="@nfilter.MaxPrice" /><br />
+                            <label>Min Price = @nfilter.MinPrice</label><input type="range" class="slider" min="0" max="@nfilter.MaxPrice " step="1" @bind="@nfilter.MinPrice" />
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Genres</b></div>
-                            @foreach (var genre in filters.Genres)
+                            @foreach (var genre in filter.Genres)
                             {
                                 <input type="checkbox" class="check" @onclick="@(() => { ChangeGenre(genre); })" /><label>@genre</label><br />
                             }
@@ -37,7 +37,7 @@ else
                     <tr>
                         <td>
                             <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Languages</b></div>
-                            @foreach (var language in filters.Languages)
+                            @foreach (var language in filter.Languages)
                             {
                                 <input type="checkbox" class="check" @onclick="@(() => { ChangeLanguage(language); })" /><label>@language</label><br />
                             }
@@ -46,14 +46,14 @@ else
                     <tr>
                         <td>
                             <div>
-                                <input type="checkbox" class="check" @onclick="@(() => { newFilters.AvailableOnly = !newFilters.AvailableOnly; })" /><label>Only show available</label>
+                                <input type="checkbox" class="check" @onclick="@(() => { nfilter.AvailableOnly = !nfilter.AvailableOnly; })" /><label>Only show available</label>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div>
-                                <input type="checkbox" class="check" @onclick="@(() => { newFilters.PartOfSeries = !newFilters.PartOfSeries; })" /><label>Only show in series</label>
+                                <input type="checkbox" class="check" @onclick="@(() => { nfilter.PartOfSeries = !nfilter.PartOfSeries; })" /><label>Only show in series</label>
                             </div>
                         </td>
                     </tr>
@@ -126,8 +126,8 @@ else
 
 @code{
     private RetrieveBook[] books;
-    private Filters filters;
-    private Filters newFilters;
+    private Filter filter;
+    private Filter nfilter;
     private string user;
     private string response;
     private int addedBookId;
@@ -139,19 +139,19 @@ else
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = authState.User.Identity.Name;
             books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
-            filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
+            filter = await Http.GetFromJsonAsync<Filter>($"/filters/over");
         }
         catch (AccessTokenNotAvailableException exception)
         {
             exception.Redirect();
         }
 
-        newFilters = new Filters
+        nfilter = new Filter
         {
             Genres = new List<string>(),
             Languages = new List<string>(),
-            MaxPrice = filters.MaxPrice,
-            MinPrice = filters.MinPrice,
+            MaxPrice = filter.MaxPrice,
+            MinPrice = filter.MinPrice,
             AvailableOnly = false,
             PartOfSeries = false
         };
@@ -172,33 +172,33 @@ else
 
     private void ChangeGenre(string genre)
     {
-        if (newFilters.Genres.Contains(genre))
+        if (nfilter.Genres.Contains(genre))
         {
-            newFilters.Genres.Remove(genre);
+            nfilter.Genres.Remove(genre);
         }
         else
         {
-            newFilters.Genres.Add(genre);
+            nfilter.Genres.Add(genre);
         }
         StateHasChanged();
     }
 
     private void ChangeLanguage(string language)
     {
-        if (newFilters.Languages.Contains(language))
+        if (nfilter.Languages.Contains(language))
         {
-            newFilters.Languages.Remove(language);
+            nfilter.Languages.Remove(language);
         }
         else
         {
-            newFilters.Languages.Add(language);
+            nfilter.Languages.Add(language);
         }
         StateHasChanged();
     }
 
     private async void FilterBooks()
     {
-        var result = await Http.PostAsJsonAsync("books", newFilters);
+        var result = await Http.PostAsJsonAsync("books", nfilter);
         books = await result.Content.ReadFromJsonAsync<RetrieveBook[]>();
         StateHasChanged();
     }

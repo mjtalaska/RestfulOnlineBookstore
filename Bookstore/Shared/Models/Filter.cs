@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Shared.Models
 {
-    public class Filters
+    public class Filter
     {
         public ICollection<string> Genres { get; set; }
         public ICollection<string> Languages { get; set; }
