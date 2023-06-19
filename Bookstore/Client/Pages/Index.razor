@@ -14,20 +14,53 @@
 }
 else
 {
-    <table class="normal" style="width:90%">
+    <table class="normal" style="width:80%">
         <tr class="normal">
             <td class="normal" style="width: 30%">
                 <table>
                     <tr>
                         <td>
-                            @foreach(var genre in filters.Genres)
+                            <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Price Range</b></div>
+                            <label>Max Price = @newFilters.MaxPrice</label><input type="range" class="slider" min="@newFilters.MinPrice" max="@filters.MaxPrice" step="1" @bind="@newFilters.MaxPrice" /><br />
+                            <label>Min Price = @newFilters.MinPrice</label><input type="range" class="slider" min="0" max="@newFilters.MaxPrice " step="1" @bind="@newFilters.MinPrice" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Genres</b></div>
+                            @foreach (var genre in filters.Genres)
                             {
-                                <input type="checkbox" @onactivate="@(() => { AddGenre(genre); })" @ondeactivate="@(() => { RemoveGenre(genre); })"/><label>@genre</label><br />
+                                <input type="checkbox" class="check" @onclick="@(() => { ChangeGenre(genre); })" /><label>@genre</label><br />
                             }
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <div style="text-align: center"><b style="font-size: 25px; font-family: 'Poppins', sans-serif;">Languages</b></div>
+                            @foreach (var language in filters.Languages)
+                            {
+                                <input type="checkbox" class="check" @onclick="@(() => { ChangeLanguage(language); })" /><label>@language</label><br />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <input type="checkbox" class="check" @onclick="@(() => { newFilters.AvailableOnly = !newFilters.AvailableOnly; })" /><label>Only show available</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <input type="checkbox" class="check" @onclick="@(() => { newFilters.PartOfSeries = !newFilters.PartOfSeries; })" /><label>Only show in series</label>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
-            </td>
+                <div style="text-align: center">
+                    <button class="filter" @onclick="FilterBooks"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;">Filter</b></button>
+                </div></td>
             <td class="normal" style="width: 70%">
                 @if (books.Length == 0)
                 {
@@ -62,11 +95,11 @@ else
                                 <div style="text-align: left">@string.Join(" ", book.Genres)</div>
                             </td>
                             <td class="buttons">
-                                <button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" />
-                                <button class="comments" />
+                                <p><button class="details" @onclick="@(() => { OpenDetails(book.BookId); })" /></p>
+                                <p><button class="comments" /></p>
                                 @if (book.IsAvailable())
                                 {
-                                    <button class="cart" @onclick="@(() => { AddToCart(book); })" />
+                                    <p><button class="cart" @onclick="@(() => { AddToCart(book); })" /></p>
                                 }
                             </td>
                         </tr>
@@ -92,36 +125,36 @@ else
 }
 
 @code{
-        private RetrieveBook[] books;
-        private Filters filters;
-        private Filters newFilters;
-        private string user;
-        private string response;
-        private int addedBookId;
+    private RetrieveBook[] books;
+    private Filters filters;
+    private Filters newFilters;
+    private string user;
+    private string response;
+    private int addedBookId;
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        try
         {
-            try
-            {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                user = authState.User.Identity.Name;
-                books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
-                filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
-            }
-            catch (AccessTokenNotAvailableException exception)
-            {
-                exception.Redirect();
-            }
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User.Identity.Name;
+            books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
+            filters = await Http.GetFromJsonAsync<Filters>($"/filters/over");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
 
-            newFilters = new Filters
-            {
-                Genres = new List<string>(),
-                Languages = new List<string>(),
-                MaxPrice = filters.MaxPrice,
-                MinPrice = filters.MinPrice,
-                AvailableOnly = false,
-                PartOfSeries = false
-            };
+        newFilters = new Filters
+        {
+            Genres = new List<string>(),
+            Languages = new List<string>(),
+            MaxPrice = filters.MaxPrice,
+            MinPrice = filters.MinPrice,
+            AvailableOnly = false,
+            PartOfSeries = false
+        };
     }
 
     private void OpenDetails(int id)
@@ -134,16 +167,40 @@ else
         var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
         response = await result.Content.ReadAsStringAsync();
         addedBookId = book.BookId;
+        StateHasChanged();
     }
 
-    private void AddGenre(string genre)
+    private void ChangeGenre(string genre)
     {
-        newFilters.Genres.Add(genre);
+        if (newFilters.Genres.Contains(genre))
+        {
+            newFilters.Genres.Remove(genre);
+        }
+        else
+        {
+            newFilters.Genres.Add(genre);
+        }
+        StateHasChanged();
     }
 
-    private void RemoveGenre(string genre)
+    private void ChangeLanguage(string language)
     {
-        newFilters.Genres.Remove(genre);
+        if (newFilters.Languages.Contains(language))
+        {
+            newFilters.Languages.Remove(language);
+        }
+        else
+        {
+            newFilters.Languages.Add(language);
+        }
+        StateHasChanged();
+    }
+
+    private async void FilterBooks()
+    {
+        var result = await Http.PostAsJsonAsync("books", newFilters);
+        books = await result.Content.ReadFromJsonAsync<RetrieveBook[]>();
+        StateHasChanged();
     }
 
 }
@@ -281,5 +338,55 @@ else
             background-size: cover;
             width: 75px;
             height: 75px;
+        }
+
+    .slider {
+        -webkit-appearance: none;
+        height: 3px;
+        background: #6600ff;
+        width: 90%;
+        border-radius: 50%;
+    }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6600ff;
+            cursor: pointer;
+        }
+
+    .check {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        background: #a6a6a6;
+        margin-right: 10px;
+        border-radius: 10px;
+    }
+        .check:hover {
+            background: #6600ff;
+        }
+
+        .check:checked {
+            background: #6600ff;
+        }
+
+    .filter {
+        width: 80%;
+        height: 20%;
+        background: #a6a6a6;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .filter:hover {
+            width: 80%;
+            height: 20%;
+            background: #6600ff;
+            color: white;
         }
 </style>

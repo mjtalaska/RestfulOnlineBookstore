@@ -112,12 +112,11 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 54 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Cart.razor"
+#line 57 "C:\Users\User\Desktop\Homework\S6\MAS\RestfulOnlineBookstore\Bookstore\Client\Pages\Cart.razor"
        
     [Parameter]
     public string userName { get; set; }
     private BookInCart[] booksInCart;
-    private decimal? final;
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,7 +124,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             booksInCart = await Http.GetFromJsonAsync<BookInCart[]>($"/cart/{userName}");
-            final = await Http.GetFromJsonAsync<decimal>($"/checkout/{userName}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -136,12 +134,14 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     private void OnDelete(BookInCart book)
     {
         book.Amount = 0;
+        StateHasChanged();
     }
 
     private async void SaveChanges()
     {
         booksInCart.ToList().ForEach(e => e.Amount = e.AmountOrMaxAvailable());
         var result = await Http.PostAsJsonAsync($"/cart/change/{userName}", booksInCart.ToArray());
+        StateHasChanged();
     }
 
     private void GoToCheckout()

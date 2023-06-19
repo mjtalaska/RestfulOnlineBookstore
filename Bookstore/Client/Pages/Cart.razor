@@ -14,9 +14,12 @@ else
     <p style="font-size: 50px; text-align: center "><b>Sum: <b style="color: #6600ff">@(booksInCart.Select(e => e.Amount*e.Price).Sum())</b> USD</b></p>
     <div style="text-align: center">
         <button class="saveChanges" @onclick="@(() => { SaveChanges(); })"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;">Save Changes</b></button>
-        <button class="saveChanges"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;" @onclick="GoToCheckout">Go to checkout</b></button>
+        @if (booksInCart.Length != 0 && booksInCart.Select(e => e.Amount).Sum() != 0)
+        {
+            <button class="saveChanges"><b style="font-size: 30px; font-family: 'Poppins', sans-serif;" @onclick="GoToCheckout">Go to checkout</b></button>
+        }
     </div>
-    @if (booksInCart.Length == 0)
+    @if (booksInCart.Length == 0 || booksInCart.Select(e => e.Amount).Sum() == 0)
     {
         <p style="font-size: 50px; color: black; text-align: center "><b>Your cart is currently empty!</b></p>
     }
@@ -43,7 +46,7 @@ else
                     </td>
                     <td style="width: 15%">
                         <button class="delete" @onclick="@(() => { OnDelete(book);})" />
-                        <input type="range" class="slider" min="1" max="@book.MaxAmount" step="1" @bind="@book.Amount"/>
+                        <input type="range" class="slider" min="1" max="@book.MaxAmount" step="1" @bind="@book.Amount" />
                     </td>
                 </tr>
             }
@@ -55,7 +58,6 @@ else
     [Parameter]
     public string userName { get; set; }
     private BookInCart[] booksInCart;
-    private decimal? final;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,7 +65,6 @@ else
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             booksInCart = await Http.GetFromJsonAsync<BookInCart[]>($"/cart/{userName}");
-            final = await Http.GetFromJsonAsync<decimal>($"/checkout/{userName}");
         }
         catch (AccessTokenNotAvailableException exception)
         {
@@ -74,12 +75,14 @@ else
     private void OnDelete(BookInCart book)
     {
         book.Amount = 0;
+        StateHasChanged();
     }
 
     private async void SaveChanges()
     {
         booksInCart.ToList().ForEach(e => e.Amount = e.AmountOrMaxAvailable());
         var result = await Http.PostAsJsonAsync($"/cart/change/{userName}", booksInCart.ToArray());
+        StateHasChanged();
     }
 
     private void GoToCheckout()

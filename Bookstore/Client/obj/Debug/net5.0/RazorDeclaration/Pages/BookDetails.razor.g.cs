@@ -137,6 +137,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     {
         var result = await Http.PostAsJsonAsync($"/cart/{user}", book);
         response = await result.Content.ReadAsStringAsync();
+        StateHasChanged();
     }
 
 #line default

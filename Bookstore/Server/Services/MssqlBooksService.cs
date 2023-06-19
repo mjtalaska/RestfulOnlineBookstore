@@ -37,6 +37,52 @@ namespace Bookstore.Server.Services
             return books;
         }
 
+        public async Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filters filter)
+        {
+            List<int> genres;
+            if(filter.Genres.Count != 0)
+            {
+                genres = await _context.Genres.Where(e => filter.Genres.Contains(e.Name)).Select(e => e.GenreId).ToListAsync();
+            }
+            else
+            {
+                genres = await _context.Genres.Select(e => e.GenreId).ToListAsync();
+            }
+
+            List<int> languages;
+            if (filter.Languages.Count != 0)
+            {
+                languages = await _context.Languages.Where(e => filter.Languages.Contains(e.Name)).Select(e => e.LanguageId).ToListAsync();
+            }
+            else
+            {
+                languages = await _context.Languages.Select(e => e.LanguageId).ToListAsync();
+            }
+
+            var filteredBooks = await _context.Books.Where(e => 
+            (filter.PartOfSeries)? e.BookInSeries != null : true &&
+            (filter.AvailableOnly)? e.StatusId == 1 : true &&
+            e.Price >= filter.MinPrice &&
+            e.Price <= filter.MaxPrice &&
+            e.Genres.Select(s => s.GenreId).Any(s => genres.Contains(s)) &&
+            languages.Contains(e.LanguageId))
+                .Select(e =>
+                new RetrieveBook
+                {
+                    BookId = e.BookId,
+                    Title = e.Title,
+                    Status = e.Status.Name,
+                    Cover = e.Cover,
+                    Authors = e.Authors.Select(a => a.Author.Name + " " + a.Author.Surname).ToArray(),
+                    Genres = e.Genres.Select(s => s.Genre).Select(s => s.Name).ToArray(),
+                    Series = e.BookInSeries.Series.Name,
+                    Number = e.BookInSeries.Number
+                })
+                .ToArrayAsync();
+
+            return filteredBooks;
+        }
+
         public async Task<BookFull> GetFullBookInformation(int id)
         {
             var book = await _context.Books

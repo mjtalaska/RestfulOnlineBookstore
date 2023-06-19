@@ -10,6 +10,7 @@ namespace Bookstore.Server.Services
     public interface IBooksService
     {
         public Task<IEnumerable<RetrieveBook>> GetBooks();
+        public Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filters filter);
         public Task<Filters> GetAvailableFilters(string search);
         public Task<BookFull> GetFullBookInformation(int id);
         public Task<int> AddBookToBasket(int bookId, string userName);
