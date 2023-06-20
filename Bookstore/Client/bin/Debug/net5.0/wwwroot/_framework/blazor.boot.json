@@ -199,14 +199,14 @@
       "netstandard.dll": "sha256-qE0Q70OyVlHYY\/Y3nwMjfh+zissea9uhfvWMvPWfI7w=",
       "System.Private.CoreLib.dll": "sha256-pdkcl2+OojCfrhxX5eFmKI30wAmhL6s+sCLp7s175k0=",
       "Bookstore.Shared.dll": "sha256-QjGZhgEg4ioLkfSJB5Mx6Zi39ZvUaNIAyd5G5SpZXmQ=",
-      "Bookstore.Client.dll": "sha256-t9uAuuFiskuPLtgz07v+tdxq92D5MWR5gpevquYUF\/o="
+      "Bookstore.Client.dll": "sha256-FUlaO7DjdY31Ls2jV9CaSJY7xNmn+QR0awzCnaZPLc8="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
       "Bookstore.Shared.pdb": "sha256-dwo\/11YTmcx\/E3ZTIPHrAyKGgjj7ThthLxuvuFKolXU=",
-      "Bookstore.Client.pdb": "sha256-iVIq9oggxxOdSOsnbbksh04kKRxu9WnoQVGaFjf4W4o="
+      "Bookstore.Client.pdb": "sha256-LCo3VllvuHedNubvBYWsrpnZ0kPJZmVW3VhKxFnAAh8="
     },
     "runtime": {
       "dotnet.timezones.blat": "sha256-ootDKSA6cNAbgJLmPhrHsPVvVqkGEYdRZxucC22LWjw=",

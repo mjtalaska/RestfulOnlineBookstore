@@ -9,18 +9,15 @@ namespace Bookstore.Server.Models
 {
     public class Comment
     {
-        [Key]
-        public int CommentId { get; set; }
+        public int BookId { get; set; }
+        public string UserId { get; set; }
+
         [Range(1,10)]
         [Required]
         public int Score { get; set; }
         public string? Review { get; set; }
         [Required]
         public DateTime Date { get; set; }
-        [Required]
-        public int BookId { get; set; }
-        [Required]
-        public string UserId { get; set; }
 
         public virtual Book Book { get; set; }
         public virtual ApplicationUser User { get; set; }

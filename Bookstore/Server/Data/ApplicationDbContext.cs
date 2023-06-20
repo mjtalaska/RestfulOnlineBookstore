@@ -97,12 +97,14 @@ namespace Bookstore.Server.Data
 
             builder.Entity<Cart>(c =>
             {
+                c.HasKey(e => new { e.BookId, e.UserId });
                 c.HasOne(e => e.Book).WithMany(e => e.Carts);
                 c.HasOne(e => e.User).WithMany(e => e.InCart);
             });
 
             builder.Entity<Comment>(c =>
             {
+                c.HasKey(e => new { e.BookId, e.UserId });
                 c.HasOne(e => e.Book).WithMany(e => e.Comments);
                 c.HasOne(e => e.User).WithMany(e => e.Comments);
             });

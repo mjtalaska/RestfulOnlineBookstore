@@ -11,13 +11,10 @@
         <span style="padding-left: 20px" />
         <button class="basket" @onclick="GoToCart"/>
         <span style="padding-left: 20px" />
-        <button class="user" />
-        <span style="padding-left: 20px" />
+        <button class="user" @onclick="BeginSignOut"/>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <button class="user" @onclick="GoToLogin"/>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -35,5 +32,10 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userName = authState.User.Identity.Name;
         Navigation.NavigateTo($"/cart/{userName}");
+    }
+
+    private async void GoToLogin()
+    {
+         Navigation.NavigateTo($"authentication/login");
     }
 }
