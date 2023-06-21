@@ -144,8 +144,10 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         StateHasChanged();
     }
 
-    private void GoToCheckout()
+    private async void GoToCheckout()
     {
+        booksInCart.ToList().ForEach(e => e.Amount = e.AmountOrMaxAvailable());
+        var result = await Http.PostAsJsonAsync($"/cart/change/{userName}", booksInCart.ToArray());
         navigationManager.NavigateTo($"/checkout/{userName}");
     }
 

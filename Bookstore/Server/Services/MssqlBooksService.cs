@@ -18,26 +18,6 @@ namespace Bookstore.Server.Services
             _context = context;
         }
 
-        //Returns all the books in extent in a simpler form
-        public async Task<IEnumerable<RetrieveBook>> GetBooks()
-        {
-            var books = await _context.Books
-                .Select(e => 
-                new RetrieveBook 
-                { 
-                    BookId = e.BookId,
-                    Title = e.Title, 
-                    Status = e.Status.Name, 
-                    Cover = e.Cover, 
-                    Authors = e.Authors.Select(a => a.Author.Name + " " + a.Author.Surname).ToArray(),
-                    Genres = e.Genres.Select(s => s.Genre).Select(s => s.Name).ToArray(),
-                    Series = e.BookInSeries.Series.Name,
-                    Number = e.BookInSeries.Number
-                })
-                .ToArrayAsync();
-            return books;
-        }
-
         //Returns a list of books matching the requested filters.
         public async Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filter filter)
         {
@@ -120,8 +100,7 @@ namespace Bookstore.Server.Services
         {
             using(var transaction = await _context.Database.BeginTransactionAsync())
             {
-                //get user's id based on the provided name
-                var userId =  await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+                var userId = await GetUserIdByName(userName);
                 //find Cart association between the specified user and book, if there is no such association a null will be returned
                 var isInBasket = await _context.Carts.Where(e => e.BookId == bookId && e.UserId.Equals(userId)).FirstOrDefaultAsync();
                 //select Status of a provided book
@@ -162,9 +141,8 @@ namespace Bookstore.Server.Services
         //Returns the list of books currently in chosen user's cart
         public async Task<IEnumerable<BookInCart>> GetBooksInCart(string userName)
         {
-            //get user's id based on the name
-            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
-            //get information about all the books inside the user's cart
+            var userId = await GetUserIdByName(userName);
+            //get information about all the books inside the user's cart, update the amount if changed
             var usersCart = await _context.Carts.Where(e => e.UserId.Equals(userId)).Select(e => new BookInCart
             {
                 BookId = e.BookId,
@@ -172,7 +150,7 @@ namespace Bookstore.Server.Services
                 Series = e.Book.BookInSeries.Series.Name,
                 Number = e.Book.BookInSeries.Number,
                 Price = e.Book.Price,
-                Amount = e.Amount,
+                Amount = e.Book.AmountOrMaxAvailable(e.Amount),
                 Cover = e.Book.Cover,
                 MaxAmount = e.Book.Amount
             }).ToArrayAsync();
@@ -182,8 +160,7 @@ namespace Bookstore.Server.Services
         //Updates the content of chosen user's cart based on the changes made by him and saved in booksInCart list
         public async Task<int> SaveCartChanges(string userName, BookInCart[] booksInCart)
         {
-            //get user'id based on the name provided
-            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+            var userId = await GetUserIdByName(userName);
 
             using(var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -230,8 +207,7 @@ namespace Bookstore.Server.Services
         //Returns final cost of the contents of user's cart, including a 10% discount for all books belonging to a series if the cart contains the entire series
         public async Task<decimal> GetFinalPrice(string userName)
         {
-            //get user's id based on user'name
-            var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+            var userId = await GetUserIdByName(userName);
             //get all the Cart associations for the user
             var books = await _context.Carts.Where(e => e.UserId.Equals(userId)).ToListAsync();
             //get all the series present in user's cart, together with the number of books in the full series
@@ -268,10 +244,15 @@ namespace Bookstore.Server.Services
         {
             using(var transaction = await _context.Database.BeginTransactionAsync())
             {
-                //get user id based on user name
-                var userId = await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
+                var userId = await GetUserIdByName(userName);
                 //get a new object made from a Cart with a corresponding book for all the Cart objects associated with the specified user
                 var cart = await _context.Carts.Where(e => e.UserId.Equals(userId)).Join(_context.Books, e => e.BookId, k => k.BookId, (e,k) => new { Book = k, Cart = e}).ToListAsync();
+
+                if (cart.Count == 0)
+                {
+                    return -1;
+                }
+
                 List<Purchase> purchases = new List<Purchase>();
                 //for each book in cart create new Purchase object and update the amount of available books
                 cart.ForEach(e =>
@@ -298,6 +279,12 @@ namespace Bookstore.Server.Services
                 await transaction.CommitAsync();
             }
             return 0;
+        }
+
+        //get user's id based on the provided name
+        private async Task<string> GetUserIdByName(string userName)
+        {
+            return await _context.Users.Where(e => e.UserName.Equals(userName)).Select(e => e.Id).FirstAsync();
         }
 
     }

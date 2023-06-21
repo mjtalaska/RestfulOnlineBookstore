@@ -134,8 +134,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = authState.User.Identity.Name;
-            books = await Http.GetFromJsonAsync<RetrieveBook[]>("books");
             filter = await Http.GetFromJsonAsync<Filter>($"/filters/over");
+            var result = await Http.PostAsJsonAsync("books", filter);
+            books = await result.Content.ReadFromJsonAsync<RetrieveBook[]>();
         }
         catch (AccessTokenNotAvailableException exception)
         {

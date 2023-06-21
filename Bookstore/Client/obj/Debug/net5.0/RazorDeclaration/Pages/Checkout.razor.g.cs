@@ -136,6 +136,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
     {
         var result = await Http.PostAsJsonAsync($"/checkout/{userName}", final);
         message = await result.Content.ReadAsStringAsync();
+        final = await Http.GetFromJsonAsync<decimal>($"/checkout/{userName}");
         StateHasChanged();
     }
 

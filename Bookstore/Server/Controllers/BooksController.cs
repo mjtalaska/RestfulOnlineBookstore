@@ -19,12 +19,6 @@ namespace Bookstore.Server.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<RetrieveBook>> GetBooks()
-        {
-            return await _service.GetBooks();
-        }
-
         [HttpPost]
         public async Task<IEnumerable<RetrieveBook>> GetBooksByFilter(Filter filter)
         {
@@ -80,8 +74,14 @@ namespace Bookstore.Server.Controllers
         [HttpPost("/checkout/{userName}")]
         public async Task<IActionResult> PurchaseBooksInCart(string userName, decimal final)
         {
-            await _service.Purchase(userName);
-            return Ok($"Succesfully finalized the transaction");
+            var result = await _service.Purchase(userName);
+            string message = "";
+            switch (result)
+            {
+                case -1: message = "Nothing was purchased - your cart is empty"; break;
+                case 0: message = "Succesfully finalized the transaction"; break;
+            }
+            return Ok(message);
         }
     }
 }
